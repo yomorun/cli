@@ -1,0 +1,76 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  Name: yomo
+  ExeName: yomo{{exeExt}}
+  ExeDir: yomo 
+  Version: 
+    sh: git describe --always --tags --dirty
+  Date:
+    sh: git show -s --format=%cs {{.Commit}}
+  Commit:
+    sh: git rev-parse --short HEAD
+  Module:
+    sh: go list -m
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.Name}}"
+    silent: true
+
+  build:
+    desc: build yomo cli tools
+    cmds:
+      - echo "{{.Name}} building..."
+      - go build -v -o {{.ExeDir}}/{{.ExeName}} -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" {{.ExeDir}}/main.go
+      - echo "{{.Name}} built."
+    generates:
+      - "{{.ExeDir}}/{{.ExeName}}"
+    sources:
+      - "**/*.go"
+    method: none
+    silent: true
+
+  run:
+    desc: run yomo cli 
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}}"
+    silent: false
+
+  cli-go:
+    desc: yomo run basic application
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run --name basic go run example/basic/main.go"
+    silent: false
+
+  cli-exe:
+    desc: yomo run basic application
+    deps: [build,basic-build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run -n basic example/basic/basic{{exeExt}}"
+    silent: false
+
+  basic-run:
+    desc: go run basic application
+    cmds:
+      - "go run example/basic/main.go"
+    silent: false
+
+  basic-build:
+    desc: go build basic application
+    dir: example/basic/
+    cmds:
+      - go build -v -o basic{{.exeExt}} -ldflags "-s -w" main.go
+    silent: false
+
+  version:
+    desc: "print version"
+    cmds: 
+      - echo "Version {{.Version}}({{.Date}})"
+    vars:
+    silent: true
