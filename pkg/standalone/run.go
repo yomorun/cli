@@ -23,6 +23,7 @@ type RunOptions struct {
 	// Port is the port number of UDP host for Serverless function (default is 4242).
 	Url       string
 	Name      string
+	Lang      string
 	Arguments []string
 }
 
