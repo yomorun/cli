@@ -14,8 +14,9 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/tklauser/go-sysconf v0.3.6 // indirect
 	github.com/yomorun/y3-codec-golang v1.6.9
-	github.com/yomorun/yomo v1.3.0
+	github.com/yomorun/yomo v1.2.520
 	golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa
+	golang.org/x/tools v0.0.0-20191125144606-a911d9008d1f
 )
 
-replace github.com/yomorun/yomo v1.3.0 => /Users/venjiang/gopath/src/github.com/venjiang/yomo
+// replace github.com/yomorun/yomo v1.3.0 => /Users/venjiang/gopath/src/github.com/venjiang/yomo

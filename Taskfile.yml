@@ -41,18 +41,25 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}}"
     silent: false
 
-  cli-run:
+  example-basic:
     desc: yomo run basic application
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run --name basic example/basic/main.go"
     silent: false
 
-  cli-app:
-    desc: yomo run cli app 
+  example-app:
+    desc: yomo run cli/app.go
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/cli/app.go"
+    silent: false
+
+  example-flow:
+    desc: "yomo run -n xxx example/flow/app.go"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/flow/app.go"
     silent: false
 
   basic-run:

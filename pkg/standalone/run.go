@@ -12,21 +12,6 @@ import (
 
 const sentryDefaultAddress = "localhost:50001"
 
-type baseOptions struct {
-	// Filename is the name of Serverless function file (default is app.go).
-	Filename string
-}
-
-// RunOptions are the options for run command.
-type RunOptions struct {
-	baseOptions
-	// Port is the port number of UDP host for Serverless function (default is 4242).
-	Url       string
-	Name      string
-	Lang      string
-	Arguments []string
-}
-
 // RunConfig represents the application configuration parameters.
 type RunConfig struct {
 	AppID              string

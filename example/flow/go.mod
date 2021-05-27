@@ -7,4 +7,4 @@ require (
 	github.com/yomorun/yomo v1.2.520
 )
 
-replace github.com/yomorun/yomo => ../../
+// replace github.com/yomorun/yomo => ../../

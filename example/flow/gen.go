@@ -7,6 +7,8 @@ import (
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
+	"github.com/yomorun/yomo/pkg/client"
+	_ "github.com/yomorun/yomo/pkg/client"
 	"github.com/yomorun/yomo/pkg/rx"
 )
 
@@ -39,7 +41,6 @@ var callback = func(v []byte) (interface{}, error) {
 
 // Handler will handle data in Rx way
 func Handler(rxstream rx.RxStream) rx.RxStream {
-	log.Println("Handler is running...")
 	stream := rxstream.
 		Subscribe(NoiseDataKey).
 		OnObserve(callback).
@@ -49,4 +50,17 @@ func Handler(rxstream rx.RxStream) rx.RxStream {
 		Encode(0x11)
 
 	return stream
+}
+
+// Serverless main function
+func main() {
+	// cli, err := client.NewServerless("{{.Name}}").Connect("{{.Url}}", {{.Port}})
+	cli, err := client.NewServerless("Noise").Connect("localhost", 9000)
+	if err != nil {
+		log.Print("Connect to zipper failure: ", err)
+		return
+	}
+
+	defer cli.Close()
+	cli.Pipe(Handler)
 }

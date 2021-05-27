@@ -2,7 +2,6 @@ package serverless
 
 import (
 	"fmt"
-	"log"
 	"path/filepath"
 	"sync"
 )
@@ -13,7 +12,7 @@ var (
 )
 
 type Serverless interface {
-	Init(sourceFile string)
+	Init(opts *Options) error
 	Build(clean bool) error
 	Run() error
 }
@@ -30,9 +29,9 @@ func Register(ext string, s Serverless) {
 	drivers[ext] = s
 }
 
-func Resolve(source string) (Serverless, error) {
+func Create(opts *Options) (Serverless, error) {
 	// isSource := false
-	ext := filepath.Ext(source)
+	ext := filepath.Ext(opts.Filename)
 	// if ext != "" && ext != ".exe" {
 	// 	isSource = true
 	// }
@@ -40,9 +39,10 @@ func Resolve(source string) (Serverless, error) {
 	driversMu.RLock()
 	s, ok := drivers[ext]
 	driversMu.RUnlock()
-	log.Printf("sourceFile ext: %s", ext)
 	if ok {
-		s.Init(source)
+		if err := s.Init(opts); err != nil {
+			return nil, err
+		}
 		return s, nil
 	}
 	return nil, fmt.Errorf(`serverless: unsupport "%s" source (forgotten import?)`, ext)

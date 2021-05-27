@@ -1,0 +1,12 @@
+
+// Serverless main function
+func main() {
+	cli, err := yomoclient.NewServerless("{{.Name}}").Connect("{{.Host}}", {{.Port}})
+	if err != nil {
+		stdlog.Print("Connect to zipper failure: ", err)
+		return
+	}
+
+	defer cli.Close()
+	cli.Pipe(Handler)
+}
