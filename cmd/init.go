@@ -16,31 +16,51 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/file"
+	"github.com/yomorun/cli/pkg/log"
+	"github.com/yomorun/cli/serverless/golang"
+)
+
+var (
+	name string
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initialize a YoMo Serverless Application",
-	Long:  "Initialize a YoMo Serverless Application",
+	Short: "Initialize a YoMo Serverless function",
+	Long:  "Initialize a YoMo Serverless function",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		if len(args) >= 1 && args[0] != "" {
+			name = args[0]
+		}
+
+		if name == "" {
+			log.FailureStatusEvent(os.Stdout, "Please input your app name")
+			return
+		}
+
+		log.PendingStatusEvent(os.Stdout, "Initializing the Serverless app...")
+		// create app.go
+		fname := filepath.Join(name, "app.go")
+		if err := file.PutContents(fname, golang.InitFuncTmpl); err != nil {
+			log.FailureStatusEvent(os.Stdout, "Write serverless function into app.go file failure with the error: %v", err)
+			return
+		}
+
+		log.SuccessStatusEvent(os.Stdout, "Congratulations! You have initialized the serverless function successfully.")
+		log.InfoStatusEvent(os.Stdout, "You can enjoy the YoMo Serverless via the command: ")
+		log.InfoStatusEvent(os.Stdout, "\tDEV: \tyomo dev -n %s %s/app.go", "Noise", name)
+		log.InfoStatusEvent(os.Stdout, "\tPROD: \tFirst run source application, eg: go run example/source/main.go\r\n\t\tSecond: yomo run -n %s %s/app.go", name, name)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	initCmd.Flags().StringVarP(&name, "name", "n", "", "The name of Serverless app")
 }

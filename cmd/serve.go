@@ -61,7 +61,7 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 
 	serveCmd.Flags().StringVarP(&config, "config", "c", "workflow.yaml", "Workflow config file")
-	serveCmd.MarkFlagRequired("config")
+	// serveCmd.MarkFlagRequired("config")
 }
 
 func printZipperConf(wfConf *serverless.WorkflowConfig) {

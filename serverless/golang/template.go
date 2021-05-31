@@ -9,6 +9,9 @@ import (
 //go:embed templates/main.tmpl
 var MainFuncTmpl []byte
 
+//go:embed templates/init.tmpl
+var InitFuncTmpl []byte
+
 // Context main function data
 type Context struct {
 	Name string
