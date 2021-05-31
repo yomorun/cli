@@ -3,5 +3,5 @@ host: localhost
 port: 9000
 flows:
   - name: Noise
-# sinks:
-#   - name: MockDB
+sinks:
+  - name: MockDB

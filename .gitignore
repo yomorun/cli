@@ -10,10 +10,16 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+.DS_Store
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
 #
+
 yomo/yomo
-example/basic/basic
+example/source/source
+example/source/source.exe
 example/flow/sl.yomo
+example/flow/sl.exe
+example/sink/sink
+example/sink/sink.exe
