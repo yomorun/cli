@@ -25,10 +25,6 @@ import (
 	"github.com/yomorun/cli/serverless"
 )
 
-var (
-	config string
-)
-
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",

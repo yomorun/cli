@@ -20,12 +20,16 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/serverless"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	config string
+	opts   serverless.Options
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -59,9 +63,9 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
+	if config != "" {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		viper.SetConfigFile(config)
 	} else {
 		// Find home directory.
 		home, err := homedir.Dir()

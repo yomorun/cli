@@ -27,8 +27,7 @@ import (
 )
 
 var (
-	url  string
-	opts serverless.Options
+	url string
 )
 
 const (
@@ -50,7 +49,7 @@ var runCmd = &cobra.Command{
 		// Serverless
 		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
 		// resolve serverless
-		log.PendingStatusEvent(os.Stdout, "Making YoMo serverless instance...")
+		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
 		if err := parseURL(url, &opts); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return

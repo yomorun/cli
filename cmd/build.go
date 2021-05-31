@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 CELLA, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,36 +16,51 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/log"
+	"github.com/yomorun/cli/serverless"
 )
 
 // buildCmd represents the build command
 var buildCmd = &cobra.Command{
 	Use:   "build",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Build the YoMo Serverless Function",
+	Long:  "Build the YoMo Serverless Function as binary file",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("build called")
+		if len(args) > 0 {
+			opts.Filename = args[0]
+		}
+		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
+		// resolve serverless
+		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
+		if err := parseURL(url, &opts); err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
+		s, err := serverless.Create(&opts)
+		if err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
+		log.InfoStatusEvent(os.Stdout,
+			"Starting YoMo serverless instance. Host: %s. Port: %d.",
+			opts.Host,
+			opts.Port,
+		)
+		// build
+		log.PendingStatusEvent(os.Stdout, "YoMo serverless function building...")
+		if err := s.Build(true); err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
+		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(buildCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// buildCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// buildCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	buildCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file (default is app.go)")
 }

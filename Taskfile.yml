@@ -106,3 +106,13 @@ tasks:
     cmds: 
       - echo "Version {{.Version}}({{.Date}})"
     silent: true
+
+  clean:
+    desc: "clean"
+    cmds: 
+      - echo 'cleaning...'
+      - rm -rf ./example/source/source{{exeExt}}
+      - rm -rf ./example/flow/sl.*
+      - rm -rf ./example/sink/sink{{exeExt}}
+      - echo 'clean.'
+    silent: true
