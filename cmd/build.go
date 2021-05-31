@@ -45,7 +45,8 @@ var buildCmd = &cobra.Command{
 			return
 		}
 		log.InfoStatusEvent(os.Stdout,
-			"Starting YoMo serverless instance. Host: %s. Port: %d.",
+			"Starting YoMo serverless instance with Name: %s. Host: %s. Port: %d.",
+			opts.Name,
 			opts.Host,
 			opts.Port,
 		)
@@ -63,4 +64,7 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file (default is app.go)")
+	buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr")
+	buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name (required). It should match the specific service name in zipper config (workflow.yaml)")
+	buildCmd.MarkFlagRequired("name")
 }

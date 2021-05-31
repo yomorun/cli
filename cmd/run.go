@@ -26,10 +26,6 @@ import (
 	_ "github.com/yomorun/cli/serverless/golang"
 )
 
-var (
-	url string
-)
-
 const (
 	runtimeWaitTimeoutInSeconds = 60
 )

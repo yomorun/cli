@@ -20,7 +20,7 @@ vars:
 tasks:
   default:
     cmds:
-      - echo "{{.Name}}"
+      - task -l 
     silent: true
 
   build:

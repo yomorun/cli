@@ -95,7 +95,7 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 	}
 	// log.InfoStatusEvent(os.Stdout, "final write file elapse: %v", time.Since(now))
 	// mod
-	cmd := exec.Command("/bin/sh", "-c", "go mod init yomo")
+	cmd := exec.Command("/bin/sh", "-c", "go mod init "+s.opts.Name)
 	// cmd := exec.Command(fmt.Sprintf("go mod init %s", s.opts.Name))
 	cmd.Dir = tempDir
 	env := os.Environ()
