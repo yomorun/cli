@@ -62,6 +62,13 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/flow/app.go"
     silent: false
 
+  example-zipper:
+    desc: "yomo serve -c example/zipper/workflow.yaml"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
+    silent: false
+
   basic-run:
     desc: go run basic application
     cmds:
