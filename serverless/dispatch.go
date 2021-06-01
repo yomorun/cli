@@ -6,6 +6,7 @@ import (
 	"github.com/yomorun/yomo/pkg/rx"
 )
 
+// DispatcherWithFunc dispatches the input stream to downstreams.
 func DispatcherWithFunc(flows []func() (io.ReadWriter, func()), reader io.Reader) rx.RxStream {
 	stream := rx.FromReader(reader)
 
