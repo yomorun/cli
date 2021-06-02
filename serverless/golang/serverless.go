@@ -2,7 +2,6 @@ package golang
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -11,11 +10,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	// "os/exec"
+	"os/exec"
 	"path/filepath"
 	"runtime"
 
-	exec "golang.org/x/sys/execabs"
+	// exec "golang.org/x/sys/execabs"
 
 	"golang.org/x/tools/go/ast/astutil"
 	"golang.org/x/tools/imports"
@@ -50,7 +49,6 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 		return fmt.Errorf(`"%s" content is empty`, s.opts.Filename)
 	}
 	// append main function
-	// // TODO: 替换变量
 	ctx := Context{
 		Name: s.opts.Name,
 		Host: s.opts.Host,
@@ -95,7 +93,8 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 	}
 	// log.InfoStatusEvent(os.Stdout, "final write file elapse: %v", time.Since(now))
 	// mod
-	cmd := exec.Command("/bin/sh", "-c", "go mod init "+s.opts.Name)
+	// cmd := exec.Command("/bin/sh", "-c", "go mod init "+s.opts.Name)
+	cmd := exec.Command("go", "mod", "init", s.opts.Name)
 	// cmd := exec.Command(fmt.Sprintf("go mod init %s", s.opts.Name))
 	cmd.Dir = tempDir
 	env := os.Environ()
@@ -104,9 +103,8 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 	// log.InfoStatusEvent(os.Stdout, "Init: cmd: %+v", cmd)
 	// log.InfoStatusEvent(os.Stdout, "Init: cmd.Dir: %v", cmd.Dir)
 	out, err := cmd.CombinedOutput()
-	if err != nil && len(out) > 0 {
-		// get error message from stdout.
-		err = errors.New("Build: go mod init err " + string(out))
+	if err != nil {
+		err = fmt.Errorf("Init: go mod init err %s", out)
 		return err
 	}
 
@@ -126,36 +124,39 @@ func (s *GolangServerless) Build(clean bool) error {
 	env := os.Environ()
 	env = append(env, fmt.Sprintf("GO111MODULE=%s", "on"))
 	// yomo
-	cmd := exec.Command("/bin/sh", "-c", "go get -u github.com/yomorun/yomo")
+	// cmd := exec.Command("/bin/sh", "-c", "go get -u github.com/yomorun/yomo")
+	cmd := exec.Command("go", "get", "-u", "github.com/yomorun/yomo")
 	cmd.Dir = s.tempDir
 	// cmd := exec.Command("go mod download")
 	cmd.Env = env
 	out, err := cmd.CombinedOutput()
-	if err != nil && len(out) > 0 {
+	if err != nil {
 		// get error message from stdout.
-		err = errors.New("Build: go get yomo " + string(out))
+		err = fmt.Errorf("Build: go get yomo err %s", out)
 		return err
 	}
 	// y3-codec
-	cmd = exec.Command("/bin/sh", "-c", "go get -u github.com/yomorun/y3-codec-golang")
+	// cmd = exec.Command("/bin/sh", "-c", "go get -u github.com/yomorun/y3-codec-golang")
+	cmd = exec.Command("go", "get", "-u", "github.com/yomorun/y3-codec-golang")
 	cmd.Env = env
 	cmd.Dir = s.tempDir
 	// cmd := exec.Command("go mod download")
 	out, err = cmd.CombinedOutput()
-	if err != nil && len(out) > 0 {
+	if err != nil {
 		// get error message from stdout.
-		err = errors.New("Build: go get y3-codec-golang" + string(out))
+		err = fmt.Errorf("Build: go get y3-codec-golang err %s", out)
 		return err
 	}
 	// deps
-	cmd = exec.Command("/bin/sh", "-c", "go mod download")
+	// cmd = exec.Command("/bin/sh", "-c", "go mod download")
+	cmd = exec.Command("go", "mod", "download")
 	cmd.Env = env
 	cmd.Dir = s.tempDir
 	// cmd := exec.Command("go mod download")
 	out, err = cmd.CombinedOutput()
-	if err != nil && len(out) > 0 {
+	if err != nil {
 		// get error message from stdout.
-		err = errors.New("Build: go mod download err " + string(out))
+		err = fmt.Errorf("Build: go mod download err %s", out)
 		return err
 	}
 
@@ -172,28 +173,33 @@ func (s *GolangServerless) Build(clean bool) error {
 	}
 	s.target = sl
 	if goos == "windows" {
-		sl = dir + "sl.exe"
-		cmd := exec.Command("go build -ldflags \"-s -w\" -o " + sl + " " + appPath)
-		cmd.Env = env
-		cmd.Dir = ""
-		out, err := cmd.CombinedOutput()
-		if err != nil && len(out) > 0 {
-			// get error message from stdout.
-			err = errors.New("Build: " + string(out))
-		}
-		return err
+		sl, _ := filepath.Abs(dir + "sl.exe")
+		s.target = sl
 	}
+	// // cmd := exec.Command("go build -ldflags \"-s -w\" -o " + sl + " " + appPath)
+	// cmd := exec.Command("go", "build", "-ldflags", "-s -w", "-o", sl, appPath)
+	// cmd.Env = env
+	// cmd.Dir = ""
+	// out, err := cmd.CombinedOutput()
+	// if err != nil && len(out) > 0 {
+	// 	// get error message from stdout.
+	// 	err = errors.New("Build: " + string(out))
+	// }
+	// return err
+	// }
 	// *nix
-	cmd = exec.Command("/bin/sh", "-c", "go build -ldflags \"-s -w\" -o "+sl+" "+appPath)
+	// cmd = exec.Command("/bin/sh", "-c", "go build -ldflags \"-s -w\" -o "+sl+" "+appPath)
+	cmd = exec.Command("go", "build", "-ldflags", "-s -w", "-o", sl, appPath)
 	cmd.Env = env
 	cmd.Dir = s.tempDir
 	// log.InfoStatusEvent(os.Stdout, "Build: cmd: %+v", cmd)
 	// source := file.GetContents(s.source)
 	// log.InfoStatusEvent(os.Stdout, "source: %s", source)
 	out, err = cmd.CombinedOutput()
-	if err != nil && len(out) > 0 {
+	if err != nil {
 		// get error message from stdout.
-		err = errors.New("Build: failure " + string(out))
+		err = fmt.Errorf("Build: failure %s", out)
+		return err
 	}
 	return err
 }

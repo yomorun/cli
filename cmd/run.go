@@ -17,8 +17,6 @@ package cmd
 
 import (
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/spf13/cobra"
 	"github.com/yomorun/cli/pkg/log"
@@ -40,8 +38,8 @@ var runCmd = &cobra.Command{
 			opts.Filename = args[0]
 		}
 		// os signal
-		sigCh := make(chan os.Signal, 1)
-		signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
+		// sigCh := make(chan os.Signal, 1)
+		// signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
 		// Serverless
 		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
 		// resolve serverless
@@ -75,9 +73,9 @@ var runCmd = &cobra.Command{
 			return
 		}
 		// Exit
-		<-sigCh
-		log.WarningStatusEvent(os.Stdout, "Terminated signal received: shutting down")
-		log.InfoStatusEvent(os.Stdout, "Exited YoMo serverless instance.")
+		// <-sigCh
+		// log.WarningStatusEvent(os.Stdout, "Terminated signal received: shutting down")
+		// log.InfoStatusEvent(os.Stdout, "Exited YoMo serverless instance.")
 	},
 }
 
