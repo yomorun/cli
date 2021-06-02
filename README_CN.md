@@ -1,16 +1,18 @@
 # YoMo CLI
 YoMo 命令行工具
 
+## 前置条件
+❗️确保已安装 Go 编译运行环境，参考 [Installing Go](https://golang.org/doc/install)
 ## 安装
-```
+```sh
 go install github.com/yomorun/cli/yomo@latest
 ```
 
-## 使用
-❗️确保已安装 Go 编译运行环境，参考 [Installing Go](https://golang.org/doc/install)
+## 快速指南
 
-### Source 应用程序(数据来源)
+### 1.Source 应用程序(数据来源)
 #### 编写数据生产应用程序
+参见 [example/source/main.go](https://github.com/yomorun/cli/blob/main/example/source/main.go)
 
 #### 运行 Source 应用
 
@@ -18,48 +20,30 @@ go install github.com/yomorun/cli/yomo@latest
 go run main.go
 ```
 
-### YoMo 流处理函数
-#### 编写流处理函数 `app.go`
+### 2. Flow 流处理函数
+#### 初始化一个流处理函数 
+
+```sh
+yomo init [Name]
+```
 
 #### 运行流处理函数
 
-##### 开发环境
-
-```
+```shell
 yomo run --name [Name] app.go
 ```
 
-##### 生产环境
-
-- 编译函数
-
-```
-yomo build --name [Name] app.go
-```
-
-- 执行流处理函数
-  *nix 环境
-
-    ```
-    ./sl.yomo
-    ```
-
-	Windows 环境
-    ```
-    sl.exe
-    ```
-
-
-### Sink 应用程序(数据输出)
+### 3.Sink 应用程序(数据输出)
 #### 编写数据消费应用程序
+参见 [example/sink/main.go](https://github.com/yomorun/cli/blob/main/example/sink/main.go)
 
 #### 运行 Sink 应用
 
-```
+```shell
 go run main.go
 ```
 
-### Zipper 应用编排
+### 4.Zipper 应用编排
 #### 编写工作流配置文件 `workflow.yaml`
 
 ```yaml
@@ -72,38 +56,20 @@ sinks:
   - name: MockDB
 ```
 
-#### 运行 YoMo 应用程序
+#### 运行 Zipper 应用程序
 
-```
+```shell
 yomo serve --config workflow.yaml
 ```
-
-
 
 ## 示例
 
 ### 前置条件
 - 安装 [task](https://taskfile.dev/#/installation)
 
-### 运行 Zipper 
-
-#### 运行示例 Zipper 服务
-```
-task example-zipper
-```
 ### 运行示例
 
-#### 基础示例
-
-```
+```shell
 task example
 ```
-
-
-
-## TODO
-
-- serverless 增加builder 子目录用于不同语言构建?
-- log 更名 printer?
-- serverless options 是否可以和 workflow config共用?
 
