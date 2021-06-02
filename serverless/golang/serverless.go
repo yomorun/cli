@@ -172,8 +172,9 @@ func (s *GolangServerless) Build(clean bool) error {
 		}()
 	}
 	s.target = sl
+	// fmt.Printf("goos=%s\n", goos)
 	if goos == "windows" {
-		sl, _ := filepath.Abs(dir + "sl.exe")
+		sl, _ = filepath.Abs(dir + "sl.exe")
 		s.target = sl
 	}
 	// // cmd := exec.Command("go build -ldflags \"-s -w\" -o " + sl + " " + appPath)

@@ -105,5 +105,5 @@ task example
 
 - serverless 增加builder 子目录用于不同语言构建?
 - log 更名 printer?
-- serverless options 是否可以和 workflow config共同?
+- serverless options 是否可以和 workflow config共用?
 
