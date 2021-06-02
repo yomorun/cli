@@ -45,12 +45,8 @@ tasks:
 
   example:
     desc: example
-    deps: [example-source,example-flow,example-sink]
+    deps: [example-zipper,example-source,example-flow,example-sink]
     cmds:
-      # - task: example-zipper
-      # - task: example-source
-      # - task: example-flow
-      # - task: example-sink
       - echo "example"
 
   example-source:
@@ -114,5 +110,7 @@ tasks:
       - rm -rf ./example/source/source{{exeExt}}
       - rm -rf ./example/flow/sl.*
       - rm -rf ./example/sink/sink{{exeExt}}
+      - rm -rf ./yomo/yomo{{exeExt}}
       - echo 'clean.'
     silent: true
+
