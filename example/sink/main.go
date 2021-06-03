@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
-	"strconv"
 
 	y3 "github.com/yomorun/y3-codec-golang"
 	"github.com/yomorun/yomo/pkg/rx"
@@ -14,13 +12,13 @@ import (
 )
 
 var store = func(_ context.Context, i interface{}) (interface{}, error) {
-	value := i.(string)
+	value := i.(float32)
 	fmt.Printf("save `%v` to FaunaDB\n", value)
 	return value, nil
 }
 
 var callback = func(v []byte) (interface{}, error) {
-	return y3.ToUTF8String(v)
+	return y3.ToFloat32(v)
 }
 
 // Handler will handle data in Rx way
@@ -35,7 +33,7 @@ func Handler(rxstream rx.RxStream) rx.RxStream {
 }
 
 func main() {
-	cli, err := client.NewServerless("MockDB").Connect("localhost", getPort())
+	cli, err := client.NewServerless("MockDB").Connect("localhost", 9000)
 	if err != nil {
 		log.Print("❌ Connect to zipper failure: ", err)
 		return
@@ -43,13 +41,4 @@ func main() {
 
 	defer cli.Close()
 	cli.Pipe(Handler)
-}
-
-func getPort() int {
-	port := 9000
-	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
-		port, _ = strconv.Atoi(os.Getenv("PORT"))
-	}
-	
-	return port
 }

@@ -85,7 +85,7 @@ tasks:
     deps: [example-sink-build]
     dir: "example/sink"
     cmds:
-      - echo "source building..."
+      - echo "sink building..."
       - "./sink{{exeExt}}"
       - echo "sink built."
     silent: false
@@ -116,13 +116,13 @@ tasks:
 
   example-mesh-us:
     desc: example-mesh-us
-    deps: [example-mesh-zipper-us,example-flow,example-sink,example-source]
+    deps: [example-mesh-zipper-us,example-mesh-flow-us,example-mesh-sink-us,example-mesh-source-us]
     cmds:
       - echo "example-mesh-us"
 
   example-mesh-eu:
     desc: example-mesh-eu
-    deps: [example-mesh-zipper-eu,example-flow-eu,example-sink-eu,example-source-eu]
+    deps: [example-mesh-zipper-eu,example-mesh-flow-eu,example-mesh-sink-eu,example-mesh-source-eu]
     cmds:
       - echo "example-mesh-eu"
 
@@ -140,30 +140,87 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
     silent: false
 
-  example-source-eu:
+  example-mesh-source-us:
     desc: run source application
-    deps: [example-source-build]
-    dir: "example/source"
+    deps: [example-mesh-source-build]
+    dir: "example/mesh/source"
+    cmds:
+      - "./source{{exeExt}}"
+    env:
+      PORT: 9000
+    silent: false
+
+  example-mesh-source-eu:
+    desc: run source application
+    deps: [example-mesh-source-build]
+    dir: "example/mesh/source"
     cmds:
       - "./source{{exeExt}}"
     env:
       PORT: 9800
-      REGION: "EU"
     silent: false
 
-  example-flow-eu:
-    desc: "run flow function"
-    deps: [build]
+  example-mesh-source-build:
+    desc: build source application
+    dir: "example/mesh/source"
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/flow/app.go -u localhost:9800"
+      - echo "source building..."
+      - "go build -o source{{exeExt}} main.go"
+      - echo "source built."
     silent: false
 
-  example-sink-eu:
+  example-mesh-flow-us:
+    desc: run flow application
+    deps: [example-mesh-flow-build]
+    dir: "example/mesh/flow"
+    cmds:
+      - "./flow{{exeExt}}"
+    env:
+      PORT: 9000
+      REGION: "💖 US 💖"
+    silent: false
+
+  example-mesh-flow-eu:
+    desc: run flow application
+    deps: [example-mesh-flow-build]
+    dir: "example/mesh/flow"
+    cmds:
+      - "./flow{{exeExt}}"
+    env:
+      PORT: 9800
+      REGION: "💙 EU 💙"
+    silent: false
+
+  example-mesh-flow-build:
+    desc: build flow application
+    dir: "example/mesh/flow"
+    cmds:
+      - "go build -o flow{{exeExt}} app.go"
+    silent: false
+
+  example-mesh-sink-us:
     desc: run sink application
-    deps: [example-sink-build]
-    dir: "example/sink"
+    deps: [example-mesh-sink-build]
+    dir: "example/mesh/sink"
+    cmds:
+      - "./sink{{exeExt}}"
+    env:
+      PORT: 9000
+    silent: false
+
+  example-mesh-sink-eu:
+    desc: run sink application
+    deps: [example-mesh-sink-build]
+    dir: "example/mesh/sink"
     cmds:
       - "./sink{{exeExt}}"
     env:
       PORT: 9800
+    silent: false
+
+  example-mesh-sink-build:
+    desc: build sink application
+    dir: "example/mesh/sink"
+    cmds:
+      - "go build -o sink{{exeExt}} main.go"
     silent: false

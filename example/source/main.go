@@ -4,8 +4,6 @@ import (
 	"io"
 	"log"
 	"math/rand"
-	"os"
-	"strconv"
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
@@ -20,7 +18,7 @@ type noiseData struct {
 
 func main() {
 	// connect to yomo-zipper.
-	cli, err := client.NewSource("yomo-source").Connect("localhost", getPort())
+	cli, err := client.NewSource("yomo-source").Connect("localhost", 9000)
 	if err != nil {
 		log.Printf("❌ Emit the data to yomo-zipper failure with err: %v", err)
 		return
@@ -30,15 +28,6 @@ func main() {
 
 	// generate mock data and send it to yomo-zipper in every 100 ms.
 	generateAndSendData(cli)
-}
-
-func getPort() int {
-	port := 9000
-	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
-		port, _ = strconv.Atoi(os.Getenv("PORT"))
-	}
-	
-	return port
 }
 
 var codec = y3.NewCodec(0x10)

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
@@ -21,16 +20,11 @@ type NoiseData struct {
 	From  string  `y3:"0x13"`
 }
 
-var region = os.Getenv("REGION")
-
 var printer = func(_ context.Context, i interface{}) (interface{}, error) {
 	value := i.(NoiseData)
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
 	fmt.Println(fmt.Sprintf("[%s] %d > value: %f ⚡️=%dms", value.From, value.Time, value.Noise, rightNow-value.Time))
-	if region == "" {
-		region = "US"
-	}
-	return fmt.Sprint(region, " ", value.Noise), nil
+	return value.Noise, nil
 }
 
 var callback = func(v []byte) (interface{}, error) {
