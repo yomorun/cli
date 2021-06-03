@@ -114,7 +114,7 @@ func (c *QuicConn) getStreamType(payload client.NegotiationPayload, conf *Workfl
 			}
 		}
 	}
-	return "", fmt.Errorf("the client type %s isn't matched any stream type", payload.ClientType)
+	return "", fmt.Errorf("the client %s (type: %s) isn't matched any stream type", payload.AppName, payload.ClientType)
 }
 
 // Beat sends the heartbeat to clients and checks if receiving the heartbeat back.

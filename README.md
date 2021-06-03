@@ -76,9 +76,24 @@ yomo serve --config workflow.yaml
 ### Prerequisites
 [Installing task](https://taskfile.dev/#/installation)
 
-### Run
+### Simple Example
+
+#### Run
 
 ```sh
 task example
 ```
 
+### Edge-Mesh
+
+#### Run US Node
+
+```sh
+task example-mesh-us
+```
+
+#### Run EU Node
+
+```sh
+task example-mesh-eu
+```

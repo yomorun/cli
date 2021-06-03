@@ -114,3 +114,56 @@ tasks:
       - echo 'clean.'
     silent: true
 
+  example-mesh-us:
+    desc: example-mesh-us
+    deps: [example-mesh-zipper-us,example-flow,example-sink,example-source]
+    cmds:
+      - echo "example-mesh-us"
+
+  example-mesh-eu:
+    desc: example-mesh-eu
+    deps: [example-mesh-zipper-eu,example-flow-eu,example-sink-eu,example-source-eu]
+    cmds:
+      - echo "example-mesh-eu"
+
+  example-mesh-zipper-us:
+    desc: "run zipper-us"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
+    silent: false
+
+  example-mesh-zipper-eu:
+    desc: "run zipper-eu"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
+    silent: false
+
+  example-source-eu:
+    desc: run source application
+    deps: [example-source-build]
+    dir: "example/source"
+    cmds:
+      - "./source{{exeExt}}"
+    env:
+      PORT: 9800
+      REGION: "EU"
+    silent: false
+
+  example-flow-eu:
+    desc: "run flow function"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/flow/app.go -u localhost:9800"
+    silent: false
+
+  example-sink-eu:
+    desc: run sink application
+    deps: [example-sink-build]
+    dir: "example/sink"
+    cmds:
+      - "./sink{{exeExt}}"
+    env:
+      PORT: 9800
+    silent: false
