@@ -25,6 +25,8 @@ import (
 	"github.com/yomorun/cli/serverless"
 )
 
+var meshConfURL string
+
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
@@ -45,7 +47,7 @@ var serveCmd = &cobra.Command{
 		endpoint := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
 		log.InfoStatusEvent(os.Stdout, "Running YoMo Serverless...")
-		err = serverless.Start(endpoint, serverless.NewQuicHandler(conf))
+		err = serverless.Start(endpoint, serverless.NewQuicHandler(conf, meshConfURL))
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -57,6 +59,7 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 
 	serveCmd.Flags().StringVarP(&config, "config", "c", "workflow.yaml", "Workflow config file")
+	serveCmd.Flags().StringVarP(&meshConfURL, "mesh-config", "m", "", "The URL of mesh config")
 	// serveCmd.MarkFlagRequired("config")
 }
 

@@ -14,3 +14,5 @@ require (
 	golang.org/x/tools v0.0.0-20191125144606-a911d9008d1f
 	gopkg.in/yaml.v2 v2.4.0
 )
+
+replace github.com/yomorun/yomo => /Users/xiaojianhong/Git/yomo/yomo
