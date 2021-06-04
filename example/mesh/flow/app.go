@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
+	"github.com/yomorun/yomo/pkg/client"
 	"github.com/yomorun/yomo/pkg/rx"
 )
 
@@ -20,11 +23,13 @@ type NoiseData struct {
 	From  string  `y3:"0x13"`
 }
 
+var region = os.Getenv("REGION")
+
 var printer = func(_ context.Context, i interface{}) (interface{}, error) {
 	value := i.(NoiseData)
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
 	fmt.Println(fmt.Sprintf("[%s] %d > value: %f ⚡️=%dms", value.From, value.Time, value.Noise, rightNow-value.Time))
-	return value.Noise, nil
+	return fmt.Sprint(region, " ", value.Noise), nil
 }
 
 var callback = func(v []byte) (interface{}, error) {
@@ -45,8 +50,27 @@ func Handler(rxstream rx.RxStream) rx.RxStream {
 		OnObserve(callback).
 		Debounce(50).
 		Map(printer).
-		StdOut().
 		Encode(0x11)
 
 	return stream
+}
+
+func main() {
+	cli, err := client.NewServerless("Noise").Connect("localhost", getPort())
+	if err != nil {
+		log.Print("❌ Connect to zipper failure: ", err)
+		return
+	}
+
+	defer cli.Close()
+	cli.Pipe(Handler)
+}
+
+func getPort() int {
+	port := 9000
+	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
+		port, _ = strconv.Atoi(os.Getenv("PORT"))
+	}
+	
+	return port
 }

@@ -23,3 +23,6 @@ example/flow/sl.yomo
 example/flow/sl.exe
 example/sink/sink
 example/sink/sink.exe
+example/mesh/source/source
+example/mesh/flow/flow
+example/mesh/sink/sink
