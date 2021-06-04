@@ -343,7 +343,9 @@ func (s *QuicHandler) receiveDataFromSources() {
 							if err != nil {
 								log.FailureStatusEvent(os.Stdout, err.Error())
 								// remove writer
+								s.mutex.Lock()
 								s.zipperSenders = append(s.zipperSenders[:index], s.zipperSenders[index+1:]...)
+								s.mutex.Unlock()
 							}
 						}(sender, value, i)
 					}

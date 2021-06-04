@@ -16,9 +16,11 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/log"
+	"github.com/yomorun/cli/serverless"
 )
 
 // devCmd represents the dev command
@@ -27,11 +29,44 @@ var devCmd = &cobra.Command{
 	Short: "Dev a YoMo Serverless Function",
 	Long:  "Dev a YoMo Serverless Function with mocking yomo-source data from YCloud.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("dev called")
+		if len(args) > 0 {
+			opts.Filename = args[0]
+		}
+		// Serverless
+		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
+		// resolve serverless
+		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
+
+		// TODO: change the host and port to the remote dev-server's address.
+		// Connect the serverless to YoMo dev-server, it will automatically emit the mock data.
+		opts.Host = "localhost"
+		opts.Port = 9000
+		opts.Name = "YoMo Stream Function"
+
+		s, err := serverless.Create(&opts)
+		if err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
+
+		// build
+		log.PendingStatusEvent(os.Stdout, "YoMo serverless function building...")
+		if err := s.Build(true); err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
+		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
+		// run
+		log.InfoStatusEvent(os.Stdout, "YoMo serverless function is running...")
+		if err := s.Run(); err != nil {
+			log.FailureStatusEvent(os.Stdout, err.Error())
+			return
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(devCmd)
 
+	devCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file")
 }

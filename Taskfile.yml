@@ -49,6 +49,13 @@ tasks:
     cmds:
       - echo "example"
 
+  example-yomo-dev:
+    desc: "run stream function via yomo-dev"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} dev example/flow/app.go"
+    silent: false
+
   example-source:
     desc: run source application
     deps: [example-source-build]
