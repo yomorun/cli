@@ -37,9 +37,8 @@ var devCmd = &cobra.Command{
 		// resolve serverless
 		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
 
-		// TODO: change the host and port to the remote dev-server's address.
 		// Connect the serverless to YoMo dev-server, it will automatically emit the mock data.
-		opts.Host = "localhost"
+		opts.Host = "dev.yomo.run"
 		opts.Port = 9000
 		opts.Name = "YoMo Stream Function"
 
