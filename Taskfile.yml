@@ -8,6 +8,7 @@ vars:
   Name: yomo
   ExeName: yomo{{exeExt}}
   ExeDir: yomo 
+  ReleaseDir: release 
   Version: 
     sh: git describe --always --tags --dirty
   Date:
@@ -34,6 +35,26 @@ tasks:
     sources:
       - "**/*.go"
     method: none
+    silent: true
+
+  install:
+    desc: install yomo cli tools
+    deps: []
+    dir: yomo
+    cmds:
+      - echo "{{.Name}} install..."
+      - go install -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" 
+      - echo "{{.Name}} {{.Version}}({{.Date}}) is installed."
+    silent: true
+
+  release:
+    desc: release yomo cli tools
+    cmds:
+      - echo "{{.Name}} release..."
+      - GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_mac yomo/main.go
+      - GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_linux yomo/main.go
+      - GOOS=windows GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_windows.exe yomo/main.go
+      - echo "{{.Name}} {{.Version}} is released."
     silent: true
 
   run:
@@ -118,6 +139,7 @@ tasks:
       - rm -rf ./example/flow/sl.*
       - rm -rf ./example/sink/sink{{exeExt}}
       - rm -rf ./yomo/yomo{{exeExt}}
+      - rm -rf ./release
       - echo 'clean.'
     silent: true
 

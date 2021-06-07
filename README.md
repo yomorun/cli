@@ -6,8 +6,15 @@ Command-line tools for YoMo
 [Installing Go](https://golang.org/doc/install)
 
 ## Installing
+You can easily install the latest release globally by running:
+
 ```sh
 go install github.com/yomorun/cli/yomo@latest
+```
+Or you can install into another directory:
+
+```sh
+env GOBIN=/bin go install github.com/yomorun/cli/yomo@latest
 ```
 
 ## Getting Started
