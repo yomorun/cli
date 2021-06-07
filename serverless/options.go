@@ -6,5 +6,6 @@ type Options struct {
 	Host      string
 	Port      int
 	Name      string
+	ModFile   string
 	Arguments []string
 }

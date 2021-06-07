@@ -67,4 +67,5 @@ func init() {
 	buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr")
 	buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name (required). It should match the specific service name in zipper config (workflow.yaml)")
 	buildCmd.MarkFlagRequired("name")
+	buildCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 }
