@@ -447,7 +447,7 @@ func (s *QuicHandler) GetZipperSenders() error {
 	}
 
 	for _, conf := range configs {
-		if conf.Host == s.serverlessConfig.Host && conf.Port == s.serverlessConfig.Port {
+		if conf.Name == s.serverlessConfig.Name {
 			// skip current zipper, only need to connect other zippers in edge-mesh.
 			continue
 		}
