@@ -50,8 +50,7 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	// rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(versionCmd)
 
-	versionCmd.Flags().StringP("version", "v", "", "CLI version")
-
+	// versionCmd.Flags().StringP("version", "v", "", "CLI version")
 }

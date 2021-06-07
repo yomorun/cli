@@ -68,4 +68,6 @@ func init() {
 	rootCmd.AddCommand(devCmd)
 
 	devCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file")
+	devCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr, it always use the URL of dev-server by default in this command.")
+	devCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name")
 }
