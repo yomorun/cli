@@ -26,3 +26,6 @@ example/sink/sink.exe
 example/mesh/source/source
 example/mesh/flow/flow
 example/mesh/sink/sink
+
+# release directory
+release/

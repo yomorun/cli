@@ -35,6 +35,7 @@ type QuicConn struct {
 	Heartbeat  chan byte
 	IsClosed   bool
 	Ready      bool
+	onClosed   func() // onClosed is the callback when the connection is closed.
 }
 
 // zipperServerConf represents the config of zipper servers
@@ -121,6 +122,7 @@ func (c *QuicConn) getStreamType(payload client.NegotiationPayload, conf *Workfl
 func (c *QuicConn) Beat() {
 	go func() {
 		defer c.Close()
+	loop:
 		for {
 			select {
 			case _, ok := <-c.Heartbeat:
@@ -130,7 +132,8 @@ func (c *QuicConn) Beat() {
 
 			case <-time.After(5 * time.Second):
 				// close the connection if didn't receive the heartbeat after 5s.
-				c.Close()
+				log.WarningStatusEvent(os.Stdout, "Server didn't receive the heartbeat from the app [%s] after 5s, will close the connection.", c.Name)
+				break loop
 			}
 		}
 	}()
@@ -141,6 +144,7 @@ func (c *QuicConn) Beat() {
 			time.Sleep(200 * time.Millisecond)
 			err := c.SendSignal(client.SignalHeartbeat)
 			if err != nil {
+				log.FailureStatusEvent(os.Stdout, "Server sent SignalHeartbeat to app [%s] failed: %s", c.Name, err.Error())
 				break
 			}
 		}
@@ -152,6 +156,10 @@ func (c *QuicConn) Close() {
 	c.Session.CloseWithError(0, "")
 	c.IsClosed = true
 	c.Ready = true
+
+	if c.onClosed != nil {
+		c.onClosed()
+	}
 }
 
 // Start QUIC service.
@@ -163,7 +171,7 @@ func Start(endpoint string, handler quic.ServerHandler) error {
 
 // Build the workflow by config (.yaml).
 // It will create one stream for each flows/sinks.
-func Build(wfConf *WorkflowConfig, connMap *map[int64]*QuicConn) ([]yomo.FlowFunc, []yomo.SinkFunc) {
+func Build(wfConf *WorkflowConfig, connMap sync.Map) ([]yomo.FlowFunc, []yomo.SinkFunc) {
 	//init workflow
 	flows := make([]yomo.FlowFunc, 0)
 	sinks := make([]yomo.SinkFunc, 0)
@@ -180,7 +188,7 @@ func Build(wfConf *WorkflowConfig, connMap *map[int64]*QuicConn) ([]yomo.FlowFun
 }
 
 // GetSinks get sinks from config and connMap
-func GetSinks(wfConf *WorkflowConfig, connMap *map[int64]*QuicConn) []yomo.SinkFunc {
+func GetSinks(wfConf *WorkflowConfig, connMap sync.Map) []yomo.SinkFunc {
 	sinks := make([]yomo.SinkFunc, 0)
 
 	for _, app := range wfConf.Sinks {
@@ -190,17 +198,21 @@ func GetSinks(wfConf *WorkflowConfig, connMap *map[int64]*QuicConn) []yomo.SinkF
 	return sinks
 }
 
-func createReadWriter(app App, connMap *map[int64]*QuicConn, streamType string) yomo.FlowFunc {
+func createReadWriter(app App, connMap sync.Map, streamType string) yomo.FlowFunc {
 	f := func() (io.ReadWriter, yomo.CancelFunc) {
 		var conn *QuicConn = nil
 		var id int64 = 0
 
-		for i, c := range *connMap {
+		connMap.Range(func(key, value interface{}) bool {
+			c := value.(*QuicConn)
 			if c.StreamType == streamType && c.Name == app.Name {
 				conn = c
-				id = i
+				id = key.(int64)
+				return false
 			}
-		}
+			return true
+		})
+
 		if conn == nil {
 			return nil, func() {}
 		} else if conn.Stream != nil {
@@ -219,17 +231,20 @@ func createReadWriter(app App, connMap *map[int64]*QuicConn, streamType string) 
 	return f
 }
 
-func createWriter(app App, connMap *map[int64]*QuicConn, streamType string) yomo.SinkFunc {
+func createWriter(app App, connMap sync.Map, streamType string) yomo.SinkFunc {
 	f := func() (io.Writer, yomo.CancelFunc) {
 		var conn *QuicConn = nil
 		var id int64 = 0
 
-		for i, c := range *connMap {
+		connMap.Range(func(key, value interface{}) bool {
+			c := value.(*QuicConn)
 			if c.StreamType == streamType && c.Name == app.Name {
 				conn = c
-				id = i
+				id = key.(int64)
+				return false
 			}
-		}
+			return true
+		})
 
 		if conn == nil {
 			return nil, func() {}
@@ -248,10 +263,10 @@ func createWriter(app App, connMap *map[int64]*QuicConn, streamType string) yomo
 	return f
 }
 
-func cancelStream(app App, conn *QuicConn, connMap *map[int64]*QuicConn, id int64) func() {
+func cancelStream(app App, conn *QuicConn, connMap sync.Map, id int64) func() {
 	f := func() {
 		conn.Close()
-		delete(*connMap, id)
+		connMap.Delete(id)
 	}
 	return f
 }
@@ -259,7 +274,7 @@ func cancelStream(app App, conn *QuicConn, connMap *map[int64]*QuicConn, id int6
 type QuicHandler struct {
 	serverlessConfig *WorkflowConfig
 	meshConfigURL    string
-	connMap          map[int64]*QuicConn
+	connMap          sync.Map
 	source           chan io.Reader
 	zipperSenders    []io.Writer
 	zipperReceiver   chan io.Reader
@@ -270,7 +285,7 @@ func NewQuicHandler(conf *WorkflowConfig, meshConfURL string) *QuicHandler {
 	quicHandler := QuicHandler{
 		serverlessConfig: conf,
 		meshConfigURL:    meshConfURL,
-		connMap:          map[int64]*QuicConn{},
+		connMap:          sync.Map{},
 		source:           make(chan io.Reader),
 		zipperSenders:    make([]io.Writer, 0),
 		zipperReceiver:   make(chan io.Reader),
@@ -305,7 +320,7 @@ func (s *QuicHandler) receiveDataFromSources() {
 			}
 
 			// one stream for each flows/sinks.
-			flows, sinks := Build(s.serverlessConfig, &s.connMap)
+			flows, sinks := Build(s.serverlessConfig, s.connMap)
 			stream := DispatcherWithFunc(flows, item)
 
 			go func() {
@@ -341,11 +356,7 @@ func (s *QuicHandler) receiveDataFromSources() {
 							// send data to donwstream zippers
 							_, err := w.Write(value)
 							if err != nil {
-								log.FailureStatusEvent(os.Stdout, err.Error())
-								// remove writer
-								s.mutex.Lock()
-								s.zipperSenders = append(s.zipperSenders[:index], s.zipperSenders[index+1:]...)
-								s.mutex.Unlock()
+								log.FailureStatusEvent(os.Stdout, "Zipper Sender sent data to downstream zipper failed: %s", err.Error())
 							}
 						}(sender, value, i)
 					}
@@ -363,7 +374,7 @@ func (s *QuicHandler) receiveDataFromZipperSenders() {
 				return
 			}
 
-			sinks := GetSinks(s.serverlessConfig, &s.connMap)
+			sinks := GetSinks(s.serverlessConfig, s.connMap)
 			if len(sinks) == 0 {
 				continue
 			}
@@ -399,7 +410,8 @@ func (s *QuicHandler) receiveDataFromZipperSenders() {
 func (s *QuicHandler) Read(id int64, sess quic.Session, st quic.Stream) error {
 	s.mutex.Lock()
 
-	if conn, ok := s.connMap[id]; ok {
+	if c, ok := s.connMap.Load(id); ok {
+		conn := c.(*QuicConn)
 		if conn.StreamType == StreamTypeSource {
 			s.source <- st
 		} else if conn.StreamType == StreamTypeZipperSender {
@@ -418,7 +430,10 @@ func (s *QuicHandler) Read(id int64, sess quic.Session, st quic.Stream) error {
 			Ready:      true,
 		}
 		conn.Init(s.serverlessConfig)
-		s.connMap[id] = conn
+		s.connMap.Store(id, conn)
+		conn.onClosed = func() {
+			s.connMap.Delete(id)
+		}
 	}
 	s.mutex.Unlock()
 	return nil
