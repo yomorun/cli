@@ -128,8 +128,8 @@ func (c *QuicConn) Beat() {
 					return
 				}
 
-			case <-time.After(time.Second):
-				// close the connection if didn't receive the heartbeat after 1s.
+			case <-time.After(5 * time.Second):
+				// close the connection if didn't receive the heartbeat after 5s.
 				c.Close()
 			}
 		}
