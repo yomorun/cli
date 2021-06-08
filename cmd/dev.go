@@ -25,9 +25,10 @@ import (
 
 // devCmd represents the dev command
 var devCmd = &cobra.Command{
-	Use:   "dev",
-	Short: "Dev a YoMo Serverless Function",
-	Long:  "Dev a YoMo Serverless Function with mocking yomo-source data from YCloud.",
+	Use:                "dev",
+	Short:              "Dev a YoMo Serverless Function",
+	Long:               "Dev a YoMo Serverless Function with mocking yomo-source data from YCloud.",
+	FParseErrWhitelist: cobra.FParseErrWhitelist{UnknownFlags: true},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			opts.Filename = args[0]
@@ -68,7 +69,6 @@ func init() {
 	rootCmd.AddCommand(devCmd)
 
 	devCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file")
-	devCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr, it always use the URL of dev-server by default in this command.")
 	devCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name")
 	devCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 }
