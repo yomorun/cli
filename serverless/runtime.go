@@ -171,7 +171,7 @@ func Start(endpoint string, handler quic.ServerHandler) error {
 
 // Build the workflow by config (.yaml).
 // It will create one stream for each flows/sinks.
-func Build(wfConf *WorkflowConfig, connMap sync.Map) ([]yomo.FlowFunc, []yomo.SinkFunc) {
+func Build(wfConf *WorkflowConfig, connMap *sync.Map) ([]yomo.FlowFunc, []yomo.SinkFunc) {
 	//init workflow
 	flows := make([]yomo.FlowFunc, 0)
 	sinks := make([]yomo.SinkFunc, 0)
@@ -188,7 +188,7 @@ func Build(wfConf *WorkflowConfig, connMap sync.Map) ([]yomo.FlowFunc, []yomo.Si
 }
 
 // GetSinks get sinks from config and connMap
-func GetSinks(wfConf *WorkflowConfig, connMap sync.Map) []yomo.SinkFunc {
+func GetSinks(wfConf *WorkflowConfig, connMap *sync.Map) []yomo.SinkFunc {
 	sinks := make([]yomo.SinkFunc, 0)
 
 	for _, app := range wfConf.Sinks {
@@ -198,7 +198,7 @@ func GetSinks(wfConf *WorkflowConfig, connMap sync.Map) []yomo.SinkFunc {
 	return sinks
 }
 
-func createReadWriter(app App, connMap sync.Map, streamType string) yomo.FlowFunc {
+func createReadWriter(app App, connMap *sync.Map, streamType string) yomo.FlowFunc {
 	f := func() (io.ReadWriter, yomo.CancelFunc) {
 		var conn *QuicConn = nil
 		var id int64 = 0
@@ -231,7 +231,7 @@ func createReadWriter(app App, connMap sync.Map, streamType string) yomo.FlowFun
 	return f
 }
 
-func createWriter(app App, connMap sync.Map, streamType string) yomo.SinkFunc {
+func createWriter(app App, connMap *sync.Map, streamType string) yomo.SinkFunc {
 	f := func() (io.Writer, yomo.CancelFunc) {
 		var conn *QuicConn = nil
 		var id int64 = 0
@@ -263,7 +263,7 @@ func createWriter(app App, connMap sync.Map, streamType string) yomo.SinkFunc {
 	return f
 }
 
-func cancelStream(app App, conn *QuicConn, connMap sync.Map, id int64) func() {
+func cancelStream(app App, conn *QuicConn, connMap *sync.Map, id int64) func() {
 	f := func() {
 		conn.Close()
 		connMap.Delete(id)
@@ -320,7 +320,7 @@ func (s *QuicHandler) receiveDataFromSources() {
 			}
 
 			// one stream for each flows/sinks.
-			flows, sinks := Build(s.serverlessConfig, s.connMap)
+			flows, sinks := Build(s.serverlessConfig, &s.connMap)
 			stream := DispatcherWithFunc(flows, item)
 
 			go func() {
@@ -374,7 +374,7 @@ func (s *QuicHandler) receiveDataFromZipperSenders() {
 				return
 			}
 
-			sinks := GetSinks(s.serverlessConfig, s.connMap)
+			sinks := GetSinks(s.serverlessConfig, &s.connMap)
 			if len(sinks) == 0 {
 				continue
 			}
