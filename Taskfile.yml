@@ -98,7 +98,7 @@ tasks:
     desc: "run flow function"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise example/flow/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/flow/go.mod example/flow/app.go"
     silent: false
 
   example-zipper:

@@ -22,7 +22,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/yomorun/cli/pkg/log"
-	"github.com/yomorun/cli/serverless"
+	"github.com/yomorun/yomo/pkg/runtime"
 )
 
 var meshConfURL string
@@ -37,7 +37,7 @@ var serveCmd = &cobra.Command{
 			log.FailureStatusEvent(os.Stdout, "Please input the file name of workflow config")
 			return
 		}
-		conf, err := serverless.ParseConfig(config)
+		conf, err := runtime.ParseConfig(config)
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -47,7 +47,8 @@ var serveCmd = &cobra.Command{
 		endpoint := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
 		log.InfoStatusEvent(os.Stdout, "Running YoMo Serverless...")
-		err = serverless.Start(endpoint, serverless.NewQuicHandler(conf, meshConfURL))
+		rt := runtime.NewRuntime(conf, meshConfURL)
+		err = rt.Serve(endpoint)
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -63,7 +64,7 @@ func init() {
 	// serveCmd.MarkFlagRequired("config")
 }
 
-func printZipperConf(wfConf *serverless.WorkflowConfig) {
+func printZipperConf(wfConf *runtime.WorkflowConfig) {
 	log.InfoStatusEvent(os.Stdout, "Found %d flows in zipper config", len(wfConf.Flows))
 	for i, flow := range wfConf.Flows {
 		log.InfoStatusEvent(os.Stdout, "Flow %d: %s", i+1, flow.Name)
