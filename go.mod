@@ -12,3 +12,5 @@ require (
 	golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa // indirect
 	golang.org/x/tools v0.0.0-20191125144606-a911d9008d1f
 )
+
+replace github.com/yomorun/yomo => ../yomo/
