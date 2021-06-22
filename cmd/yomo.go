@@ -21,21 +21,28 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/yomorun/cli/serverless"
+	"github.com/yomorun/yomo/pkg/logger"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 var (
-	config string
-	url    string
-	opts   serverless.Options
+	config  string
+	url     string
+	opts    serverless.Options
+	verbose bool
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "yomo",
 	Version: GetVersion(),
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if verbose {
+			logger.EnableDebug()
+		}
+	},
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
@@ -50,6 +57,9 @@ func init() {
 
 	// set version
 	setVersion()
+
+	// set verbose flag
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,

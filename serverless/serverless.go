@@ -14,7 +14,7 @@ var (
 type Serverless interface {
 	Init(opts *Options) error
 	Build(clean bool) error
-	Run() error
+	Run(verbose bool) error
 }
 
 func Register(ext string, s Serverless) {

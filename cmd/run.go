@@ -68,7 +68,7 @@ var runCmd = &cobra.Command{
 		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
 		// run
 		log.InfoStatusEvent(os.Stdout, "YoMo serverless function is running...")
-		if err := s.Run(); err != nil {
+		if err := s.Run(verbose); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
