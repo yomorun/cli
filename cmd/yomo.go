@@ -58,6 +58,9 @@ func init() {
 	// set version
 	setVersion()
 
+	// overwrite the shorthand of version flag to V.
+	rootCmd.Flags().BoolP("version", "V", false, "version for yomo")
+
 	// set verbose flag
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 
