@@ -8,9 +8,6 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.7.1
-	github.com/yomorun/yomo v1.3.4
-	golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa // indirect
-	golang.org/x/tools v0.0.0-20191125144606-a911d9008d1f
+	github.com/yomorun/yomo v1.3.5
+	golang.org/x/tools v0.1.1
 )
-
-replace github.com/yomorun/yomo => /Users/xiaojianhong/Git/yomo/yomo
