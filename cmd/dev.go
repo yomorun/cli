@@ -40,8 +40,8 @@ var devCmd = &cobra.Command{
 
 		// Connect the serverless to YoMo dev-server, it will automatically emit the mock data.
 		opts.Host = "dev.yomo.run"
-		opts.Port = 9000
-		opts.Name = "YoMo Stream Function"
+		opts.Port = 9140
+		opts.Name = "yomo-app-demo"
 
 		s, err := serverless.Create(&opts)
 		if err != nil {

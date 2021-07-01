@@ -74,7 +74,7 @@ tasks:
     desc: "run stream function via yomo-dev"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} dev example/stream-fn/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} dev -m example/go.mod example/stream-fn/app.go"
     silent: false
 
   example-source:
