@@ -26,15 +26,15 @@ import (
 // buildCmd represents the build command
 var buildCmd = &cobra.Command{
 	Use:   "build",
-	Short: "Build the YoMo Serverless Function",
-	Long:  "Build the YoMo Serverless Function as binary file",
+	Short: "Build the YoMo Stream Function",
+	Long:  "Build the YoMo Stream Function as binary file",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			opts.Filename = args[0]
 		}
-		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
+		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		// resolve serverless
-		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
+		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
 		if err := parseURL(url, &opts); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -45,27 +45,27 @@ var buildCmd = &cobra.Command{
 			return
 		}
 		log.InfoStatusEvent(os.Stdout,
-			"Starting YoMo serverless instance with Name: %s. Host: %s. Port: %d.",
+			"Starting YoMo Stream Function instance with Name: %s. Host: %s. Port: %d.",
 			opts.Name,
 			opts.Host,
 			opts.Port,
 		)
 		// build
-		log.PendingStatusEvent(os.Stdout, "YoMo serverless function building...")
+		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function function building...")
 		if err := s.Build(true); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
+		log.SuccessStatusEvent(os.Stdout, "Success! YoMo Stream Function build.")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(buildCmd)
 
-	buildCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file (default is app.go)")
-	buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr")
-	buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name (required). It should match the specific service name in zipper config (workflow.yaml)")
+	buildCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file (default is app.go)")
+	buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "yomo server endpoint addr")
+	buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function app name (required). It should match the specific service name in yomo server config (workflow.yaml)")
 	buildCmd.MarkFlagRequired("name")
 	buildCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 }

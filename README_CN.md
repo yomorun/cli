@@ -10,7 +10,7 @@ go install github.com/yomorun/cli/yomo@latest
 
 ## 快速指南
 
-### 1.Source 应用程序(数据来源)
+### 1. Source 应用程序(数据来源)
 #### 编写数据生产应用程序
 参见 [example/source/main.go](https://github.com/yomorun/cli/blob/main/example/source/main.go)
 
@@ -20,7 +20,7 @@ go install github.com/yomorun/cli/yomo@latest
 go run main.go
 ```
 
-### 2. Flow 流处理函数
+### 2. Stream Function 流处理函数
 #### 初始化一个流处理函数 
 
 ```sh
@@ -33,30 +33,28 @@ yomo init [Name]
 yomo run --name [Name] app.go
 ```
 
-### 3.Sink 应用程序(数据输出)
+### 3. Output Connector (数据输出)
 #### 编写数据消费应用程序
-参见 [example/sink/main.go](https://github.com/yomorun/cli/blob/main/example/sink/main.go)
+参见 [example/output-connector/main.go](https://github.com/yomorun/cli/blob/main/example/output-connector/main.go)
 
-#### 运行 Sink 应用
+#### 运行 Output Connector 应用
 
 ```shell
 go run main.go
 ```
 
-### 4.Zipper 应用编排
+### 4. YoMo Server 应用编排
 #### 编写工作流配置文件 `workflow.yaml`
 
 ```yaml
 name: Service
 host: localhost
 port: 9000
-flows:
+functions:
   - name: Noise
-sinks:
-  - name: MockDB
 ```
 
-#### 运行 Zipper 应用程序
+#### 运行 YoMo Server 应用程序
 
 ```shell
 yomo serve --config workflow.yaml

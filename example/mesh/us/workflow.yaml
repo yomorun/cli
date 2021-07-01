@@ -1,7 +1,5 @@
 name: Zipper-US
 host: localhost
 port: 9000
-flows:
+functions:
   - name: Noise
-sinks:
-  - name: MockDB

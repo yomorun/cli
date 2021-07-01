@@ -16,16 +16,18 @@
 # vendor/
 #
 
+*.yomo
 yomo/yomo
 example/source/source
-example/source/source.exe
 example/flow/sl.yomo
-example/flow/sl.exe
 example/sink/sink
-example/sink/sink.exe
+example/output-connector/output-connector
 example/mesh/source/source
 example/mesh/flow/flow
 example/mesh/sink/sink
+example/mesh/stream-fn/stream-fn
+example/mesh/output-connector/output-connector
+example/mesh/output-connector/output-connector
 
 # release directory
 bin/

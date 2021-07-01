@@ -30,8 +30,8 @@ var meshConfURL string
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Run a YoMo Serverless instance",
-	Long:  "Run a YoMo Serverless instance",
+	Short: "Run a YoMo Server",
+	Long:  "Run a YoMo Server",
 	Run: func(cmd *cobra.Command, args []string) {
 		if config == "" {
 			log.FailureStatusEvent(os.Stdout, "Please input the file name of workflow config")
@@ -42,11 +42,11 @@ var serveCmd = &cobra.Command{
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		printZipperConf(conf)
+		printYoMoServerConf(conf)
 
 		endpoint := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
-		log.InfoStatusEvent(os.Stdout, "Running YoMo Serverless...")
+		log.InfoStatusEvent(os.Stdout, "Running YoMo Server...")
 		rt := runtime.NewRuntime(conf, meshConfURL)
 		err = rt.Serve(endpoint)
 		if err != nil {
@@ -64,14 +64,9 @@ func init() {
 	// serveCmd.MarkFlagRequired("config")
 }
 
-func printZipperConf(wfConf *runtime.WorkflowConfig) {
-	log.InfoStatusEvent(os.Stdout, "Found %d flows in zipper config", len(wfConf.Flows))
-	for i, flow := range wfConf.Flows {
-		log.InfoStatusEvent(os.Stdout, "Flow %d: %s", i+1, flow.Name)
-	}
-
-	log.InfoStatusEvent(os.Stdout, "Found %d sinks in zipper config", len(wfConf.Sinks))
-	for i, sink := range wfConf.Sinks {
-		log.InfoStatusEvent(os.Stdout, "Sink %d: %s", i+1, sink.Name)
+func printYoMoServerConf(wfConf *runtime.WorkflowConfig) {
+	log.InfoStatusEvent(os.Stdout, "Found %d stream functions in yomo-server config", len(wfConf.Functions))
+	for i, sfn := range wfConf.Functions {
+		log.InfoStatusEvent(os.Stdout, "Stream Function %d: %s", i+1, sfn.Name)
 	}
 }

@@ -32,8 +32,8 @@ var (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initialize a YoMo Serverless function",
-	Long:  "Initialize a YoMo Serverless function",
+	Short: "Initialize a YoMo Stream function",
+	Long:  "Initialize a YoMo Stream function",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) >= 1 && args[0] != "" {
 			name = args[0]
@@ -44,16 +44,16 @@ var initCmd = &cobra.Command{
 			return
 		}
 
-		log.PendingStatusEvent(os.Stdout, "Initializing the Serverless app...")
+		log.PendingStatusEvent(os.Stdout, "Initializing the Stream Function...")
 		// create app.go
 		fname := filepath.Join(name, "app.go")
 		if err := file.PutContents(fname, golang.InitFuncTmpl); err != nil {
-			log.FailureStatusEvent(os.Stdout, "Write serverless function into app.go file failure with the error: %v", err)
+			log.FailureStatusEvent(os.Stdout, "Write stream function into app.go file failure with the error: %v", err)
 			return
 		}
 
-		log.SuccessStatusEvent(os.Stdout, "Congratulations! You have initialized the serverless function successfully.")
-		log.InfoStatusEvent(os.Stdout, "You can enjoy the YoMo Serverless via the command: ")
+		log.SuccessStatusEvent(os.Stdout, "Congratulations! You have initialized the stream function successfully.")
+		log.InfoStatusEvent(os.Stdout, "You can enjoy the YoMo Stream Function via the command: ")
 		log.InfoStatusEvent(os.Stdout, "\tDEV: \tyomo dev -n %s %s/app.go", "Noise", name)
 		log.InfoStatusEvent(os.Stdout, "\tPROD: \tFirst run source application, eg: go run example/source/main.go\r\n\t\tSecond: yomo run -n %s %s/app.go", name, name)
 	},
@@ -62,5 +62,5 @@ var initCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringVarP(&name, "name", "n", "", "The name of Serverless app")
+	initCmd.Flags().StringVarP(&name, "name", "n", "", "The name of Stream Function")
 }

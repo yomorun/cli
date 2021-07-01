@@ -66,7 +66,7 @@ tasks:
 
   example:
     desc: example
-    deps: [example-zipper,example-source,example-flow,example-sink]
+    deps: [example-yomo-server,example-source,example-stream-fn,example-output-connector]
     cmds:
       - echo "example"
 
@@ -74,7 +74,7 @@ tasks:
     desc: "run stream function via yomo-dev"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} dev example/flow/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} dev example/stream-fn/app.go"
     silent: false
 
   example-source:
@@ -94,35 +94,35 @@ tasks:
       - echo "source built."
     silent: false
 
-  example-flow:
-    desc: "run flow function"
+  example-stream-fn:
+    desc: "run stream function"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/flow/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/stream-fn/app.go"
     silent: false
 
-  example-zipper:
-    desc: "run zipper"
+  example-yomo-server:
+    desc: "run yomo-server"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/yomo-server/workflow.yaml"
     silent: false
 
-  example-sink:
-    desc: run sink application
-    deps: [example-sink-build]
-    dir: "example/sink"
+  example-output-connector:
+    desc: run output connector
+    deps: [example-output-connector-build]
+    dir: "example/output-connector"
     cmds:
-      - echo "sink building..."
-      - "./sink{{exeExt}}"
-      - echo "sink built."
+      - echo "Output Connector building..."
+      - "./output-connector{{exeExt}}"
+      - echo "output-connector built."
     silent: false
 
-  example-sink-build:
-    desc: build sink application
-    dir: "example/sink"
+  example-output-connector-build:
+    desc: build output connector
+    dir: "example/output-connector"
     cmds:
-      - "go build -o sink{{exeExt}} main.go"
+      - "go build -o output-connector{{exeExt}} main.go"
     silent: false
 
   version:
@@ -136,8 +136,8 @@ tasks:
     cmds: 
       - echo 'cleaning...'
       - rm -rf ./example/source/source{{exeExt}}
-      - rm -rf ./example/flow/sl.*
-      - rm -rf ./example/sink/sink{{exeExt}}
+      - rm -rf ./example/stream-fn/sl.*
+      - rm -rf ./example/output-connector/output-connector{{exeExt}}
       - rm -rf ./yomo/yomo{{exeExt}}
       - rm -rf ./release
       - echo 'clean.'
@@ -145,25 +145,25 @@ tasks:
 
   example-mesh-us:
     desc: example-mesh-us
-    deps: [example-mesh-zipper-us,example-mesh-flow-us,example-mesh-sink-us,example-mesh-source-us]
+    deps: [example-mesh-yomo-server-us,example-mesh-stream-fn-us,example-mesh-output-connector-us,example-mesh-source-us]
     cmds:
       - echo "example-mesh-us"
 
   example-mesh-eu:
     desc: example-mesh-eu
-    deps: [example-mesh-zipper-eu,example-mesh-flow-eu,example-mesh-sink-eu,example-mesh-source-eu]
+    deps: [example-mesh-yomo-server-eu,example-mesh-stream-fn-eu,example-mesh-output-connector-eu,example-mesh-source-eu]
     cmds:
       - echo "example-mesh-eu"
 
-  example-mesh-zipper-us:
-    desc: "run zipper-us"
+  example-mesh-yomo-server-us:
+    desc: "run yomo-server-us"
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
     silent: false
 
-  example-mesh-zipper-eu:
-    desc: "run zipper-eu"
+  example-mesh-yomo-server-eu:
+    desc: "run yomo-server-eu"
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
@@ -198,58 +198,58 @@ tasks:
       - echo "source built."
     silent: false
 
-  example-mesh-flow-us:
-    desc: run flow application
-    deps: [example-mesh-flow-build]
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-us:
+    desc: run stream function
+    deps: [example-mesh-stream-fn-build]
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "./flow{{exeExt}}"
+      - "./stream-fn{{exeExt}}"
     env:
       PORT: 9000
       REGION: "💖 US 💖"
     silent: false
 
-  example-mesh-flow-eu:
-    desc: run flow application
-    deps: [example-mesh-flow-build]
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-eu:
+    desc: run stream function
+    deps: [example-mesh-stream-fn-build]
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "./flow{{exeExt}}"
+      - "./stream-fn{{exeExt}}"
     env:
       PORT: 9800
       REGION: "💙 EU 💙"
     silent: false
 
-  example-mesh-flow-build:
-    desc: build flow application
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-build:
+    desc: build stream function
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "go build -o flow{{exeExt}} app.go"
+      - "go build -o stream-fn{{exeExt}} app.go"
     silent: false
 
-  example-mesh-sink-us:
-    desc: run sink application
-    deps: [example-mesh-sink-build]
-    dir: "example/mesh/sink"
+  example-mesh-output-connector-us:
+    desc: run output connector
+    deps: [example-mesh-output-connector-build]
+    dir: "example/mesh/output-connector"
     cmds:
-      - "./sink{{exeExt}}"
+      - "./output-connector{{exeExt}}"
     env:
       PORT: 9000
     silent: false
 
-  example-mesh-sink-eu:
-    desc: run sink application
-    deps: [example-mesh-sink-build]
-    dir: "example/mesh/sink"
+  example-mesh-output-connector-eu:
+    desc: run output connector
+    deps: [example-mesh-output-connector-build]
+    dir: "example/mesh/output-connector"
     cmds:
-      - "./sink{{exeExt}}"
+      - "./output-connector{{exeExt}}"
     env:
       PORT: 9800
     silent: false
 
-  example-mesh-sink-build:
-    desc: build sink application
-    dir: "example/mesh/sink"
+  example-mesh-output-connector-build:
+    desc: build output connector
+    dir: "example/mesh/output-connector"
     cmds:
-      - "go build -o sink{{exeExt}} main.go"
+      - "go build -o output-connector{{exeExt}} main.go"
     silent: false
