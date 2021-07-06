@@ -66,7 +66,7 @@ tasks:
 
   example:
     desc: example
-    deps: [example-yomo-server,example-source,example-stream-fn,example-output-connector]
+    deps: [example-yomo-server,example-source,example-stream-fn,example-out-conn]
     cmds:
       - echo "example"
 
@@ -108,21 +108,21 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/yomo-server/workflow.yaml"
     silent: false
 
-  example-output-connector:
+  example-out-conn:
     desc: run output connector
-    deps: [example-output-connector-build]
-    dir: "example/output-connector"
+    deps: [example-out-conn-build]
+    dir: "example/out-conn"
     cmds:
       - echo "Output Connector building..."
-      - "./output-connector{{exeExt}}"
-      - echo "output-connector built."
+      - "./out-conn{{exeExt}}"
+      - echo "out-conn built."
     silent: false
 
-  example-output-connector-build:
+  example-out-conn-build:
     desc: build output connector
-    dir: "example/output-connector"
+    dir: "example/out-conn"
     cmds:
-      - "go build -o output-connector{{exeExt}} main.go"
+      - "go build -o out-conn{{exeExt}} main.go"
     silent: false
 
   version:
@@ -137,7 +137,7 @@ tasks:
       - echo 'cleaning...'
       - rm -rf ./example/source/source{{exeExt}}
       - rm -rf ./example/stream-fn/sl.*
-      - rm -rf ./example/output-connector/output-connector{{exeExt}}
+      - rm -rf ./example/out-conn/out-conn{{exeExt}}
       - rm -rf ./yomo/yomo{{exeExt}}
       - rm -rf ./release
       - echo 'clean.'
@@ -145,13 +145,13 @@ tasks:
 
   example-mesh-us:
     desc: example-mesh-us
-    deps: [example-mesh-yomo-server-us,example-mesh-stream-fn-us,example-mesh-output-connector-us,example-mesh-source-us]
+    deps: [example-mesh-yomo-server-us,example-mesh-stream-fn-us,example-mesh-out-conn-us,example-mesh-source-us]
     cmds:
       - echo "example-mesh-us"
 
   example-mesh-eu:
     desc: example-mesh-eu
-    deps: [example-mesh-yomo-server-eu,example-mesh-stream-fn-eu,example-mesh-output-connector-eu,example-mesh-source-eu]
+    deps: [example-mesh-yomo-server-eu,example-mesh-stream-fn-eu,example-mesh-out-conn-eu,example-mesh-source-eu]
     cmds:
       - echo "example-mesh-eu"
 
@@ -227,29 +227,29 @@ tasks:
       - "go build -o stream-fn{{exeExt}} app.go"
     silent: false
 
-  example-mesh-output-connector-us:
+  example-mesh-out-conn-us:
     desc: run output connector
-    deps: [example-mesh-output-connector-build]
-    dir: "example/mesh/output-connector"
+    deps: [example-mesh-out-conn-build]
+    dir: "example/mesh/out-conn"
     cmds:
-      - "./output-connector{{exeExt}}"
+      - "./out-conn{{exeExt}}"
     env:
       PORT: 9000
     silent: false
 
-  example-mesh-output-connector-eu:
+  example-mesh-out-conn-eu:
     desc: run output connector
-    deps: [example-mesh-output-connector-build]
-    dir: "example/mesh/output-connector"
+    deps: [example-mesh-out-conn-build]
+    dir: "example/mesh/out-conn"
     cmds:
-      - "./output-connector{{exeExt}}"
+      - "./out-conn{{exeExt}}"
     env:
       PORT: 9800
     silent: false
 
-  example-mesh-output-connector-build:
+  example-mesh-out-conn-build:
     desc: build output connector
-    dir: "example/mesh/output-connector"
+    dir: "example/mesh/out-conn"
     cmds:
-      - "go build -o output-connector{{exeExt}} main.go"
+      - "go build -o out-conn{{exeExt}} main.go"
     silent: false

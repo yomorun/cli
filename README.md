@@ -51,7 +51,7 @@ yomo run --name [Name] app.go
 
 #### Write an output connector
 
-See [example/output-connector/main.go](https://github.com/yomorun/cli/blob/main/example/output-connector/main.go)
+See [example/out-conn/main.go](https://github.com/yomorun/cli/blob/main/example/out-conn/main.go)
 
 #### Run
 

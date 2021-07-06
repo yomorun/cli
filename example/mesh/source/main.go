@@ -9,7 +9,7 @@ import (
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
-	"github.com/yomorun/yomo/pkg/client"
+	"github.com/yomorun/yomo/source"
 )
 
 type noiseData struct {
@@ -20,7 +20,7 @@ type noiseData struct {
 
 func main() {
 	// connect to yomo-server.
-	cli, err := client.NewSource("yomo-source").Connect("localhost", getPort())
+	cli, err := source.NewClient("yomo-source").Connect("localhost", getPort())
 	if err != nil {
 		log.Printf("❌ Emit the data to yomo-server failure with err: %v", err)
 		return
