@@ -50,7 +50,7 @@ func Handler(rxstream rx.Stream) rx.Stream {
 		OnObserve(callback).
 		Debounce(50).
 		Map(printer).
-		Encode(0x11)
+		Encode(0x14)
 
 	return stream
 }

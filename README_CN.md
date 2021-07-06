@@ -35,7 +35,7 @@ yomo run --name [Name] app.go
 
 ### 3. Output Connector (数据输出)
 #### 编写数据消费应用程序
-参见 [example/out-conn/main.go](https://github.com/yomorun/cli/blob/main/example/out-conn/main.go)
+参见 [example/connector/main.go](https://github.com/yomorun/cli/blob/main/example/connector/main.go)
 
 #### 运行 Output Connector 应用
 

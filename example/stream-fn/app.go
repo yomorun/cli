@@ -46,7 +46,7 @@ func Handler(rxstream rx.Stream) rx.Stream {
 		Debounce(50).
 		Map(printer).
 		StdOut().
-		Encode(0x11)
+		Encode(0x14)
 
 	return stream
 }
