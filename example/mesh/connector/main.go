@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	y3 "github.com/yomorun/y3-codec-golang"
-	"github.com/yomorun/yomo/connector/output"
+	"github.com/yomorun/yomo"
 	"github.com/yomorun/yomo/rx"
 )
 
@@ -33,7 +33,7 @@ func Handler(rxstream rx.Stream) rx.Stream {
 }
 
 func main() {
-	cli, err := output.NewClient("MockDB").Connect("localhost", getPort())
+	cli, err := yomo.NewOutputConnector(yomo.WithName("MockDB")).Connect("localhost", getPort())
 	if err != nil {
 		log.Print("❌ Connect to yomo-server failure: ", err)
 		return

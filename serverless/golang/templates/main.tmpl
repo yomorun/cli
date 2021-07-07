@@ -1,7 +1,7 @@
 
 // Serverless main function
 func main() {
-	cli, err := streamfunction.NewClient("{{.Name}}").Connect("{{.Host}}", {{.Port}})
+	cli, err := yomo.NewStreamFn(yomo.WithName("{{.Name}}")).Connect("{{.Host}}", {{.Port}})
 	if err != nil {
 		stdlog.Print("Connect to yomo-server failure: ", err)
 		return

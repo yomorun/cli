@@ -47,7 +47,7 @@ var serveCmd = &cobra.Command{
 		endpoint := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
 		log.InfoStatusEvent(os.Stdout, "Running YoMo Server...")
-		rt := server.NewServer(conf, meshConfURL)
+		rt := server.New(conf, server.WithMeshConfURL(meshConfURL))
 		err = rt.Serve(endpoint)
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
