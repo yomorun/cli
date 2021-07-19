@@ -20,3 +20,9 @@ build-arm:
 
 build-linux:
 	GOOS=linux $(GO) build -o bin/yomo-${VER}-x86_64-linux -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
+
+archive-bin-arm:
+	tar -czf bin/yomo-${VER}-aarch64-linux.tar.gz bin/yomo-${VER}-aarch64-linux
+
+archive-bin-linux:
+	tar -czf bin/yomo-${VER}-x86_64-linux.tar.gz bin/yomo-${VER}-x86_64-linux
