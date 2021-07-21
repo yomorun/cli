@@ -47,21 +47,21 @@ yomo init [Name]
 yomo run --name [Name] app.go
 ```
 
-### 3. Output Connector
+### 3. Stream Function to store data in DB
 
-#### Write an output connector
+#### Write a stream function
 
-See [example/connector/main.go](https://github.com/yomorun/cli/blob/main/example/connector/main.go)
+See [example/stream-fn-db/app.go](https://github.com/yomorun/cli/blob/main/example/stream-fn-db/app.go)
 
 #### Run
 
 ```sh
-go run main.go
+yomo run --name [Name] app.go
 ```
 
-### 4. YoMo Server
+### 4. YoMo-Zipper
 
-#### Configure yomo server `workflow.yaml`
+#### Configure YoMo-Zipper `workflow.yaml`
 
 ```yaml
 name: Service
@@ -69,6 +69,7 @@ host: localhost
 port: 9000
 functions:
   - name: Noise
+  - name: MockDB
 ```
 
 #### Run

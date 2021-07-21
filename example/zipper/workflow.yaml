@@ -1,5 +1,6 @@
-name: Zipper-EU
+name: Service
 host: localhost
-port: 9800
+port: 9000
 functions:
   - name: Noise
+  - name: MockDB

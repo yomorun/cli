@@ -21,13 +21,13 @@ yomo/yomo
 example/source/source
 example/flow/sl.yomo
 example/sink/sink
-example/connector/connector
+example/stream-fn-db/sl.yomo
 example/mesh/source/source
 example/mesh/flow/flow
 example/mesh/sink/sink
 example/mesh/stream-fn/stream-fn
-example/mesh/connector/connector
-example/mesh/connector/connector
+example/mesh/stream-fn-db/sl.yomo
+example/mesh/stream-fn-db/stream-fn-db
 
 # release directory
 bin/

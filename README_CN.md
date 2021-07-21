@@ -33,17 +33,17 @@ yomo init [Name]
 yomo run --name [Name] app.go
 ```
 
-### 3. Output Connector (数据输出)
+### 3. Stream Function (数据输出)
 #### 编写数据消费应用程序
-参见 [example/connector/main.go](https://github.com/yomorun/cli/blob/main/example/connector/main.go)
+参见 [example/stream-fn-db/app.go](https://github.com/yomorun/cli/blob/main/example/stream-fn-db/app.go)
 
 #### 运行 Output Connector 应用
 
 ```shell
-go run main.go
+yomo run --name [Name] app.go
 ```
 
-### 4. YoMo Server 应用编排
+### 4. YoMo-Zipper 应用编排
 #### 编写工作流配置文件 `workflow.yaml`
 
 ```yaml
@@ -54,7 +54,7 @@ functions:
   - name: Noise
 ```
 
-#### 运行 YoMo Server 应用程序
+#### 运行 YoMo-Zipper 应用程序
 
 ```shell
 yomo serve --config workflow.yaml

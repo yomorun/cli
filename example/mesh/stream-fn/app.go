@@ -58,7 +58,7 @@ func Handler(rxstream rx.Stream) rx.Stream {
 func main() {
 	cli, err := yomo.NewStreamFn(yomo.WithName("Noise")).Connect("localhost", getPort())
 	if err != nil {
-		log.Print("❌ Connect to yomo-server failure: ", err)
+		log.Print("❌ Connect to YoMo-Zipper failure: ", err)
 		return
 	}
 

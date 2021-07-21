@@ -3,7 +3,7 @@
 func main() {
 	cli, err := yomo.NewStreamFn(yomo.WithName("{{.Name}}")).Connect("{{.Host}}", {{.Port}})
 	if err != nil {
-		stdlog.Print("Connect to yomo-server failure: ", err)
+		stdlog.Print("Connect to YoMo-Zipper failure: ", err)
 		return
 	}
 

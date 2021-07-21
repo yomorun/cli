@@ -84,8 +84,8 @@ func init() {
 
 	runCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file")
 	// runCmd.Flags().StringVarP(&opts.Lang, "lang", "l", "go", "source language")
-	runCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "yomo server endpoint addr")
-	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name (required). It should match the specific service name in yomo server config (workflow.yaml)")
+	runCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
+	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name (required). It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	runCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 	runCmd.MarkFlagRequired("name")
 

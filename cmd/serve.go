@@ -22,7 +22,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/yomorun/cli/pkg/log"
-	"github.com/yomorun/yomo/server"
+	server "github.com/yomorun/yomo/zipper"
 )
 
 var meshConfURL string
@@ -30,8 +30,8 @@ var meshConfURL string
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "Run a YoMo Server",
-	Long:  "Run a YoMo Server",
+	Short: "Run a YoMo-Zipper",
+	Long:  "Run a YoMo-Zipper",
 	Run: func(cmd *cobra.Command, args []string) {
 		if config == "" {
 			log.FailureStatusEvent(os.Stdout, "Please input the file name of workflow config")
@@ -46,7 +46,7 @@ var serveCmd = &cobra.Command{
 
 		endpoint := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
-		log.InfoStatusEvent(os.Stdout, "Running YoMo Server...")
+		log.InfoStatusEvent(os.Stdout, "Running YoMo-Zipper...")
 		rt := server.New(conf, server.WithMeshConfURL(meshConfURL))
 		err = rt.Serve(endpoint)
 		if err != nil {
@@ -65,7 +65,7 @@ func init() {
 }
 
 func printYoMoServerConf(wfConf *server.WorkflowConfig) {
-	log.InfoStatusEvent(os.Stdout, "Found %d stream functions in yomo-server config", len(wfConf.Functions))
+	log.InfoStatusEvent(os.Stdout, "Found %d stream functions in YoMo-Zipper config", len(wfConf.Functions))
 	for i, sfn := range wfConf.Functions {
 		log.InfoStatusEvent(os.Stdout, "Stream Function %d: %s", i+1, sfn.Name)
 	}
