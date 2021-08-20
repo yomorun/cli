@@ -26,22 +26,22 @@ import (
 // devCmd represents the dev command
 var devCmd = &cobra.Command{
 	Use:                "dev",
-	Short:              "Dev a YoMo Serverless Function",
-	Long:               "Dev a YoMo Serverless Function with mocking yomo-source data from YCloud.",
+	Short:              "Dev a YoMo Stream Function",
+	Long:               "Dev a YoMo Stream Function with mocking yomo-source data from YCloud.",
 	FParseErrWhitelist: cobra.FParseErrWhitelist{UnknownFlags: true},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			opts.Filename = args[0]
 		}
 		// Serverless
-		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
+		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		// resolve serverless
-		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
+		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
 
 		// Connect the serverless to YoMo dev-server, it will automatically emit the mock data.
 		opts.Host = "dev.yomo.run"
-		opts.Port = 9000
-		opts.Name = "YoMo Stream Function"
+		opts.Port = 9140
+		opts.Name = "yomo-app-demo"
 
 		s, err := serverless.Create(&opts)
 		if err != nil {
@@ -50,14 +50,14 @@ var devCmd = &cobra.Command{
 		}
 
 		// build
-		log.PendingStatusEvent(os.Stdout, "YoMo serverless function building...")
+		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function building...")
 		if err := s.Build(true); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
+		log.SuccessStatusEvent(os.Stdout, "Success! YoMo Stream Function build.")
 		// run
-		log.InfoStatusEvent(os.Stdout, "YoMo serverless function is running...")
+		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function is running...")
 		if err := s.Run(verbose); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -68,7 +68,7 @@ var devCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(devCmd)
 
-	devCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file")
-	devCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name")
+	devCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file")
+	devCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function app name")
 	devCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 }

@@ -31,8 +31,8 @@ const (
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run a YoMo Serverless Function",
-	Long:  "Run a YoMo Serverless Function",
+	Short: "Run a YoMo Stream Function",
+	Long:  "Run a YoMo Stream Function",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			opts.Filename = args[0]
@@ -41,9 +41,9 @@ var runCmd = &cobra.Command{
 		// sigCh := make(chan os.Signal, 1)
 		// signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
 		// Serverless
-		log.InfoStatusEvent(os.Stdout, "YoMo serverless function file: %v", opts.Filename)
+		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		// resolve serverless
-		log.PendingStatusEvent(os.Stdout, "Create YoMo serverless instance...")
+		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
 		if err := parseURL(url, &opts); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -54,20 +54,20 @@ var runCmd = &cobra.Command{
 			return
 		}
 		log.InfoStatusEvent(os.Stdout,
-			"Starting YoMo serverless instance with Name: %s. Host: %s. Port: %d.",
+			"Starting YoMo Stream Function instance with Name: %s. Host: %s. Port: %d.",
 			opts.Name,
 			opts.Host,
 			opts.Port,
 		)
 		// build
-		log.PendingStatusEvent(os.Stdout, "YoMo serverless function building...")
+		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function building...")
 		if err := s.Build(true); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		log.SuccessStatusEvent(os.Stdout, "Success! YoMo serverless function build.")
+		log.SuccessStatusEvent(os.Stdout, "Success! YoMo Stream Function build.")
 		// run
-		log.InfoStatusEvent(os.Stdout, "YoMo serverless function is running...")
+		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function is running...")
 		if err := s.Run(verbose); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -75,17 +75,17 @@ var runCmd = &cobra.Command{
 		// Exit
 		// <-sigCh
 		// log.WarningStatusEvent(os.Stdout, "Terminated signal received: shutting down")
-		// log.InfoStatusEvent(os.Stdout, "Exited YoMo serverless instance.")
+		// log.InfoStatusEvent(os.Stdout, "Exited YoMo Stream Function instance.")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(runCmd)
 
-	runCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Serverless function file")
+	runCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file")
 	// runCmd.Flags().StringVarP(&opts.Lang, "lang", "l", "go", "source language")
-	runCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "zipper server endpoint addr")
-	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo serverless app name (required). It should match the specific service name in zipper config (workflow.yaml)")
+	runCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
+	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name (required). It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	runCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 	runCmd.MarkFlagRequired("name")
 

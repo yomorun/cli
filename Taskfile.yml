@@ -66,7 +66,7 @@ tasks:
 
   example:
     desc: example
-    deps: [example-zipper,example-source,example-flow,example-sink]
+    deps: [example-zipper,example-source,example-stream-fn,example-stream-fn-db]
     cmds:
       - echo "example"
 
@@ -74,7 +74,7 @@ tasks:
     desc: "run stream function via yomo-dev"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} dev example/flow/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} dev -m example/go.mod example/stream-fn/app.go"
     silent: false
 
   example-source:
@@ -94,11 +94,11 @@ tasks:
       - echo "source built."
     silent: false
 
-  example-flow:
-    desc: "run flow function"
+  example-stream-fn:
+    desc: "run stream function"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/flow/app.go"
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/stream-fn/app.go"
     silent: false
 
   example-zipper:
@@ -108,21 +108,11 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
     silent: false
 
-  example-sink:
-    desc: run sink application
-    deps: [example-sink-build]
-    dir: "example/sink"
+  example-stream-fn-db:
+    desc: run output stream-fn-db
+    deps: [build]
     cmds:
-      - echo "sink building..."
-      - "./sink{{exeExt}}"
-      - echo "sink built."
-    silent: false
-
-  example-sink-build:
-    desc: build sink application
-    dir: "example/sink"
-    cmds:
-      - "go build -o sink{{exeExt}} main.go"
+      - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/stream-fn-db/app.go"
     silent: false
 
   version:
@@ -136,8 +126,8 @@ tasks:
     cmds: 
       - echo 'cleaning...'
       - rm -rf ./example/source/source{{exeExt}}
-      - rm -rf ./example/flow/sl.*
-      - rm -rf ./example/sink/sink{{exeExt}}
+      - rm -rf ./example/stream-fn/sl.*
+      - rm -rf ./example/stream-fn-db/stream-fn-db{{exeExt}}
       - rm -rf ./yomo/yomo{{exeExt}}
       - rm -rf ./release
       - echo 'clean.'
@@ -145,28 +135,42 @@ tasks:
 
   example-mesh-us:
     desc: example-mesh-us
-    deps: [example-mesh-zipper-us,example-mesh-flow-us,example-mesh-sink-us,example-mesh-source-us]
+    deps: [example-mesh-zipper-sender-us,example-mesh-zipper-receiver-us,example-mesh-stream-fn-us,example-mesh-stream-fn-db-us,example-mesh-source-us]
     cmds:
       - echo "example-mesh-us"
 
   example-mesh-eu:
     desc: example-mesh-eu
-    deps: [example-mesh-zipper-eu,example-mesh-flow-eu,example-mesh-sink-eu,example-mesh-source-eu]
+    deps: [example-mesh-zipper-sender-eu,example-mesh-zipper-receiver-eu,example-mesh-stream-fn-eu,example-mesh-stream-fn-db-eu,example-mesh-source-eu]
     cmds:
       - echo "example-mesh-eu"
 
-  example-mesh-zipper-us:
-    desc: "run zipper-us"
+  example-mesh-zipper-sender-us:
+    desc: "run zipper-sender-us"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/sender.yaml -m https://mesh-config.yomo.run/api/configs"
     silent: false
 
-  example-mesh-zipper-eu:
-    desc: "run zipper-eu"
+  example-mesh-zipper-receiver-us:
+    desc: "run zipper-receiver-us"
     deps: [build]
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/workflow.yaml -m https://mesh-config.yomo.run/api/configs"
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/receiver.yaml"
+    silent: false
+
+  example-mesh-zipper-sender-eu:
+    desc: "run zipper-sender-eu"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/sender.yaml -m https://mesh-config.yomo.run/api/configs"
+    silent: false
+
+  example-mesh-zipper-receiver-eu:
+    desc: "run zipper-receiver-eu"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/eu/receiver.yaml"
     silent: false
 
   example-mesh-source-us:
@@ -198,58 +202,58 @@ tasks:
       - echo "source built."
     silent: false
 
-  example-mesh-flow-us:
-    desc: run flow application
-    deps: [example-mesh-flow-build]
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-us:
+    desc: run stream function
+    deps: [example-mesh-stream-fn-build]
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "./flow{{exeExt}}"
+      - "./stream-fn{{exeExt}}"
     env:
       PORT: 9000
       REGION: "💖 US 💖"
     silent: false
 
-  example-mesh-flow-eu:
-    desc: run flow application
-    deps: [example-mesh-flow-build]
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-eu:
+    desc: run stream function
+    deps: [example-mesh-stream-fn-build]
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "./flow{{exeExt}}"
+      - "./stream-fn{{exeExt}}"
     env:
       PORT: 9800
       REGION: "💙 EU 💙"
     silent: false
 
-  example-mesh-flow-build:
-    desc: build flow application
-    dir: "example/mesh/flow"
+  example-mesh-stream-fn-build:
+    desc: build stream function
+    dir: "example/mesh/stream-fn"
     cmds:
-      - "go build -o flow{{exeExt}} app.go"
+      - "go build -o stream-fn{{exeExt}} app.go"
     silent: false
 
-  example-mesh-sink-us:
-    desc: run sink application
-    deps: [example-mesh-sink-build]
-    dir: "example/mesh/sink"
+  example-mesh-stream-fn-db-us:
+    desc: run output stream-fn-db
+    deps: [example-mesh-stream-fn-db-build]
+    dir: "example/mesh/stream-fn-db"
     cmds:
-      - "./sink{{exeExt}}"
+      - "./stream-fn-db{{exeExt}}"
     env:
-      PORT: 9000
+      PORT: 9001
     silent: false
 
-  example-mesh-sink-eu:
-    desc: run sink application
-    deps: [example-mesh-sink-build]
-    dir: "example/mesh/sink"
+  example-mesh-stream-fn-db-eu:
+    desc: run output stream-fn-db
+    deps: [example-mesh-stream-fn-db-build]
+    dir: "example/mesh/stream-fn-db"
     cmds:
-      - "./sink{{exeExt}}"
+      - "./stream-fn-db{{exeExt}}"
     env:
-      PORT: 9800
+      PORT: 9801
     silent: false
 
-  example-mesh-sink-build:
-    desc: build sink application
-    dir: "example/mesh/sink"
+  example-mesh-stream-fn-db-build:
+    desc: build output stream-fn-db
+    dir: "example/mesh/stream-fn-db"
     cmds:
-      - "go build -o sink{{exeExt}} main.go"
+      - "go build -o stream-fn-db{{exeExt}} app.go"
     silent: false

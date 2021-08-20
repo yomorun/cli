@@ -19,7 +19,7 @@ env GOBIN=/bin go install github.com/yomorun/cli/yomo@latest
 
 ## Getting Started
 
-### 1.Source
+### 1. Source
 
 #### Write a source app
 
@@ -31,11 +31,11 @@ See [example/source/main.go](https://github.com/yomorun/cli/blob/main/example/so
 go run main.go
 ```
 
-### 2.Flow
+### 2. Stream Function
 
 #### Init
 
-Create a serverless function 
+Create a stream function
 
 ```sh
 yomo init [Name]
@@ -47,28 +47,28 @@ yomo init [Name]
 yomo run --name [Name] app.go
 ```
 
+### 3. Stream Function to store data in DB
 
-### 3.Sink
-#### Write a sink app
+#### Write a stream function
 
-See [example/sink/main.go](https://github.com/yomorun/cli/blob/main/example/sink/main.go)
+See [example/stream-fn-db/app.go](https://github.com/yomorun/cli/blob/main/example/stream-fn-db/app.go)
 
 #### Run
 
 ```sh
-go run main.go
+yomo run --name [Name] app.go
 ```
 
-### 4.Zipper
-#### Configure zipper `workflow.yaml`
+### 4. YoMo-Zipper
+
+#### Configure YoMo-Zipper `workflow.yaml`
 
 ```yaml
 name: Service
 host: localhost
 port: 9000
-flows:
+functions:
   - name: Noise
-sinks:
   - name: MockDB
 ```
 

@@ -3,12 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 
 	y3 "github.com/yomorun/y3-codec-golang"
-	"github.com/yomorun/yomo/pkg/rx"
 
-	"github.com/yomorun/yomo/pkg/client"
+	"github.com/yomorun/yomo/core/rx"
 )
 
 var store = func(_ context.Context, i interface{}) (interface{}, error) {
@@ -22,23 +20,11 @@ var callback = func(v []byte) (interface{}, error) {
 }
 
 // Handler will handle data in Rx way
-func Handler(rxstream rx.RxStream) rx.RxStream {
+func Handler(rxstream rx.Stream) rx.Stream {
 	stream := rxstream.
-		Subscribe(0x11).
+		Subscribe(0x14).
 		OnObserve(callback).
 		AuditTime(100).
-		Map(store).
-		Encode(0x12)
+		Map(store)
 	return stream
-}
-
-func main() {
-	cli, err := client.NewServerless("MockDB").Connect("localhost", 9000)
-	if err != nil {
-		log.Print("❌ Connect to zipper failure: ", err)
-		return
-	}
-
-	defer cli.Close()
-	cli.Pipe(Handler)
 }

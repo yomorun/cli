@@ -1,6 +1,5 @@
-name: Service
+name: Zipper-Receiver-US
 host: localhost
-port: 9000
+port: 9001
 functions:
-  - name: Noise
   - name: MockDB

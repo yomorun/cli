@@ -9,8 +9,8 @@ import (
 	"time"
 
 	y3 "github.com/yomorun/y3-codec-golang"
-	"github.com/yomorun/yomo/pkg/client"
-	"github.com/yomorun/yomo/pkg/rx"
+	"github.com/yomorun/yomo"
+	"github.com/yomorun/yomo/core/rx"
 )
 
 // NoiseDataKey represents the Tag of a Y3 encoded data packet
@@ -43,22 +43,22 @@ var callback = func(v []byte) (interface{}, error) {
 }
 
 // Handler will handle data in Rx way
-func Handler(rxstream rx.RxStream) rx.RxStream {
+func Handler(rxstream rx.Stream) rx.Stream {
 	log.Println("Handler is running...")
 	stream := rxstream.
 		Subscribe(NoiseDataKey).
 		OnObserve(callback).
 		Debounce(50).
 		Map(printer).
-		Encode(0x11)
+		Encode(0x14)
 
 	return stream
 }
 
 func main() {
-	cli, err := client.NewServerless("Noise").Connect("localhost", getPort())
+	cli, err := yomo.NewStreamFn(yomo.WithName("Noise")).Connect("localhost", getPort())
 	if err != nil {
-		log.Print("❌ Connect to zipper failure: ", err)
+		log.Print("❌ Connect to YoMo-Zipper failure: ", err)
 		return
 	}
 
