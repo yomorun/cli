@@ -64,7 +64,7 @@ func init() {
 	// serveCmd.MarkFlagRequired("config")
 }
 
-func printYoMoServerConf(wfConf *server.Config) {
+func printYoMoServerConf(wfConf *server.WorkflowConfig) {
 	log.InfoStatusEvent(os.Stdout, "Found %d stream functions in YoMo-Zipper config", len(wfConf.Functions))
 	for i, sfn := range wfConf.Functions {
 		log.InfoStatusEvent(os.Stdout, "Stream Function %d: %s", i+1, sfn.Name)
