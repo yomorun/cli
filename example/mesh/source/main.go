@@ -1,59 +1,52 @@
 package main
 
 import (
-	"io"
+	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 
-	y3 "github.com/yomorun/y3-codec-golang"
 	"github.com/yomorun/yomo"
 )
 
 type noiseData struct {
-	Noise float32 `y3:"0x11"` // Noise value
-	Time  int64   `y3:"0x12"` // Timestamp (ms)
-	From  string  `y3:"0x13"` // Source IP
+	Noise float32 `json:"noise"` // Noise value
+	Time  int64   `json:"time"`  // Timestamp (ms)
+	From  string  `json:"from"`  // Source IP
 }
+
+var region = os.Getenv("REGION")
 
 func main() {
 	// connect to YoMo-Zipper.
-	cli, err := yomo.NewSource(yomo.WithName("yomo-source")).Connect("localhost", getPort())
+	addr := fmt.Sprintf("%s:%d", "localhost", getPort())
+	source := yomo.NewSource("yomo-source", yomo.WithZipperAddr(addr))
+	err := source.Connect()
 	if err != nil {
 		log.Printf("❌ Emit the data to YoMo-Zipper failure with err: %v", err)
 		return
 	}
+	defer source.Close()
 
-	defer cli.Close()
-
+	source.SetDataTag(0x10)
 	// generate mock data and send it to YoMo-Zipper in every 100 ms.
-	generateAndSendData(cli)
+	generateAndSendData(source)
 }
 
-func getPort() int {
-	port := 9000
-	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
-		port, _ = strconv.Atoi(os.Getenv("PORT"))
-	}
-	
-	return port
-}
-
-var codec = y3.NewCodec(0x10)
-
-func generateAndSendData(stream io.Writer) {
+func generateAndSendData(stream yomo.Source) {
 	for {
 		// generate random data.
 		data := noiseData{
 			Noise: rand.New(rand.NewSource(time.Now().UnixNano())).Float32() * 200,
 			Time:  time.Now().UnixNano() / int64(time.Millisecond),
-			From:  "localhost",
+			From:  region,
 		}
 
 		// Encode data via Y3 codec https://github.com/yomorun/y3-codec.
-		sendingBuf, _ := codec.Marshal(data)
+		sendingBuf, _ := json.Marshal(data)
 
 		// send data via QUIC stream.
 		_, err := stream.Write(sendingBuf)
@@ -65,4 +58,13 @@ func generateAndSendData(stream io.Writer) {
 
 		time.Sleep(1 * time.Second)
 	}
+}
+
+func getPort() int {
+	port := 9000
+	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
+		port, _ = strconv.Atoi(os.Getenv("PORT"))
+	}
+
+	return port
 }

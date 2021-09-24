@@ -1,46 +1,58 @@
 package main
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 
-	y3 "github.com/yomorun/y3-codec-golang"
 	"github.com/yomorun/yomo"
-	"github.com/yomorun/yomo/core/rx"
 )
 
-var store = func(_ context.Context, i interface{}) (interface{}, error) {
-	value := i.(string)
-	fmt.Printf("save `%v` to FaunaDB\n", value)
-	return value, nil
+type NoiseData struct {
+	Noise float32 `json:"noise"`
+	Time  int64   `json:"time"`
+	From  string  `json:"from"`
 }
 
-var callback = func(v []byte) (interface{}, error) {
-	return y3.ToUTF8String(v)
+// Handler will handle the raw data.
+func Handler(data []byte) (byte, []byte) {
+	// var noise float32
+	var noise NoiseData
+	err := json.Unmarshal(data, &noise)
+	if err != nil {
+		log.Printf(">> [sink] unmarshal data failed, err=%v", err)
+	} else {
+		log.Printf("%s >> [sink] save `%v` to FaunaDB\n", noise.From, noise.Noise)
+	}
+
+	return 0x0, nil
 }
 
-// Handler will handle data in Rx way
-func Handler(rxstream rx.Stream) rx.Stream {
-	stream := rxstream.
-		Subscribe(0x14).
-		OnObserve(callback).
-		AuditTime(100).
-		Map(store)
-	return stream
+func DataID() []byte {
+	return []byte{0x14}
 }
 
 func main() {
-	cli, err := yomo.NewStreamFn(yomo.WithName("MockDB")).Connect("localhost", getPort())
+	addr := fmt.Sprintf("%s:%d", "localhost", getPort())
+	sfn := yomo.NewStreamFunction("MockDB", yomo.WithZipperAddr(addr))
+	defer sfn.Close()
+
+	// set observe DataIDs
+	sfn.SetObserveDataID(DataID()...)
+
+	// set handler
+	sfn.SetHandler(Handler)
+
+	// start
+	err := sfn.Connect()
 	if err != nil {
 		log.Print("❌ Connect to YoMo-Zipper failure: ", err)
 		return
 	}
 
-	defer cli.Close()
-	cli.Pipe(Handler)
+	select {}
 }
 
 func getPort() int {
@@ -48,6 +60,6 @@ func getPort() int {
 	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
 		port, _ = strconv.Atoi(os.Getenv("PORT"))
 	}
-	
+
 	return port
 }

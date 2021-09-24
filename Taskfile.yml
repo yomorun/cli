@@ -53,6 +53,7 @@ tasks:
       - echo "{{.Name}} release..."
       - GOOS=darwin GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_mac yomo/main.go
       - GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_linux yomo/main.go
+      - GOOS=linux GOARCH=arm64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_arm yomo/main.go
       - GOOS=windows GOARCH=amd64 go build -ldflags "-w -s -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" -o {{.ReleaseDir}}/{{.Name}}_{{.Version}}_windows.exe yomo/main.go
       - echo "{{.Name}} {{.Version}} is released."
     silent: true
@@ -77,6 +78,16 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} dev -m example/go.mod example/stream-fn/app.go"
     silent: false
 
+  example-zipper:
+    desc: "run zipper"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
+    silent: false
+    env:
+      YOMO_ENABLE_DEBUG: false
+      YOMO_LOG_LEVEL: info
+
   example-source:
     desc: run source application
     deps: [example-source-build]
@@ -95,17 +106,10 @@ tasks:
     silent: false
 
   example-stream-fn:
-    desc: "run stream function"
+    desc: "run stream-fn application"
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/stream-fn/app.go"
-    silent: false
-
-  example-zipper:
-    desc: "run zipper"
-    deps: [build]
-    cmds:
-      - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
     silent: false
 
   example-stream-fn-db:
@@ -122,15 +126,20 @@ tasks:
     silent: true
 
   clean:
-    desc: "clean"
+    desc: "cli clean"
     cmds: 
-      - echo 'cleaning...'
-      - rm -rf ./example/source/source{{exeExt}}
-      - rm -rf ./example/stream-fn/sl.*
-      - rm -rf ./example/stream-fn-db/stream-fn-db{{exeExt}}
-      - rm -rf ./yomo/yomo{{exeExt}}
-      - rm -rf ./release
-      - echo 'clean.'
+      - echo 'cli cleaning...'
+      - rm -rf example/source/source{{exeExt}}
+      - rm -rf example/stream-fn/stream-fn*
+      - rm -rf example/stream-fn/sl.*
+      - rm -rf example/stream-fn-db/stream-fn-db{{exeExt}}
+      - rm -rf example/stream-fn-db/sl.*
+      - rm -rf example/mesh/source/source{{exeExt}}
+      - rm -rf example/mesh/stream-fn/stream-fn*
+      - rm -rf example/mesh/stream-fn-db/stream-fn-db{{exeExt}}
+      - rm -rf cmd/yomo/yomo{{exeExt}}
+      - rm -rf release
+      - echo 'cli clean.'
     silent: true
 
   example-mesh-us:
@@ -150,6 +159,7 @@ tasks:
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/sender.yaml -m https://mesh-config.yomo.run/api/configs"
+      # - "{{.ExeDir}}/{{.ExeName}} serve -c example/mesh/us/sender.yaml "
     silent: false
 
   example-mesh-zipper-receiver-us:
@@ -181,6 +191,7 @@ tasks:
       - "./source{{exeExt}}"
     env:
       PORT: 9000
+      REGION: "💖 US 💖"
     silent: false
 
   example-mesh-source-eu:
@@ -191,6 +202,7 @@ tasks:
       - "./source{{exeExt}}"
     env:
       PORT: 9800
+      REGION: "💙 EU 💙"
     silent: false
 
   example-mesh-source-build:
@@ -207,7 +219,8 @@ tasks:
     deps: [example-mesh-stream-fn-build]
     dir: "example/mesh/stream-fn"
     cmds:
-      - "./stream-fn{{exeExt}}"
+      - "cp ./stream-fn{{exeExt}} ./stream-fn-us{{exeExt}}"
+      - "./stream-fn-us{{exeExt}}"
     env:
       PORT: 9000
       REGION: "💖 US 💖"
@@ -218,7 +231,8 @@ tasks:
     deps: [example-mesh-stream-fn-build]
     dir: "example/mesh/stream-fn"
     cmds:
-      - "./stream-fn{{exeExt}}"
+      - "cp ./stream-fn{{exeExt}} ./stream-fn-eu{{exeExt}}"
+      - "./stream-fn-eu{{exeExt}}"
     env:
       PORT: 9800
       REGION: "💙 EU 💙"

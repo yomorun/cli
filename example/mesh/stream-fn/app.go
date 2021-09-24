@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
 
-	y3 "github.com/yomorun/y3-codec-golang"
+	"github.com/yomorun/cli/rx"
 	"github.com/yomorun/yomo"
-	"github.com/yomorun/yomo/core/rx"
 )
 
 // NoiseDataKey represents the Tag of a Y3 encoded data packet
@@ -18,52 +18,63 @@ const NoiseDataKey = 0x10
 
 // NoiseData represents the structure of data
 type NoiseData struct {
-	Noise float32 `y3:"0x11"`
-	Time  int64   `y3:"0x12"`
-	From  string  `y3:"0x13"`
+	Noise float32 `json:"noise"`
+	Time  int64   `json:"time"`
+	From  string  `json:"from"`
 }
 
 var region = os.Getenv("REGION")
 
 var printer = func(_ context.Context, i interface{}) (interface{}, error) {
-	value := i.(NoiseData)
+	value := i.(*NoiseData)
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
-	fmt.Println(fmt.Sprintf("[%s] %d > value: %f ⚡️=%dms", value.From, value.Time, value.Noise, rightNow-value.Time))
-	return fmt.Sprint(region, " ", value.Noise), nil
-}
-
-var callback = func(v []byte) (interface{}, error) {
-	var mold NoiseData
-	err := y3.ToObject(v, &mold)
-	if err != nil {
-		return nil, err
-	}
-	mold.Noise = mold.Noise / 10
-	return mold, nil
+	fmt.Println(fmt.Sprintf("%s %d > value: %f ⚡️=%dms", value.From, value.Time, value.Noise, rightNow-value.Time))
+	value.Noise = value.Noise / 10
+	return value, nil
 }
 
 // Handler will handle data in Rx way
 func Handler(rxstream rx.Stream) rx.Stream {
 	log.Println("Handler is running...")
 	stream := rxstream.
-		Subscribe(NoiseDataKey).
-		OnObserve(callback).
+		Unmarshal(json.Unmarshal, func() interface{} { return &NoiseData{} }).
 		Debounce(50).
 		Map(printer).
-		Encode(0x14)
+		Marshal(json.Marshal).
+		PipeBackToZipper(0x14)
 
 	return stream
 }
 
 func main() {
-	cli, err := yomo.NewStreamFn(yomo.WithName("Noise")).Connect("localhost", getPort())
+	addr := fmt.Sprintf("%s:%d", "localhost", getPort())
+	sfn := yomo.NewStreamFunction("Noise", yomo.WithZipperAddr(addr))
+	defer sfn.Close()
+
+	// set observe DataIDs
+	sfn.SetObserveDataID(DataID()...)
+
+	// create a Rx runtime.
+	rt := rx.NewRuntime(sfn)
+
+	// set handler
+	sfn.SetHandler(rt.RawByteHandler)
+
+	// start
+	err := sfn.Connect()
 	if err != nil {
 		log.Print("❌ Connect to YoMo-Zipper failure: ", err)
 		return
 	}
 
-	defer cli.Close()
-	cli.Pipe(Handler)
+	// pipe rx stream and rx handler.
+	rt.Pipe(Handler)
+
+	select {}
+}
+
+func DataID() []byte {
+	return []byte{0x10}
 }
 
 func getPort() int {
@@ -71,6 +82,6 @@ func getPort() int {
 	if os.Getenv("PORT") != "" && os.Getenv("PORT") != "9000" {
 		port, _ = strconv.Atoi(os.Getenv("PORT"))
 	}
-	
+
 	return port
 }
