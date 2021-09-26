@@ -30,5 +30,6 @@ example/mesh/stream-fn-db/sl.yomo
 example/mesh/stream-fn-db/stream-fn-db
 
 # release directory
+release/
 bin/
 .vscode
