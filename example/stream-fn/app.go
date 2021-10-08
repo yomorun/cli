@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yomorun/cli/rx"
+	"github.com/yomorun/yomo/rx"
 )
 
 // NoiseData represents the structure of data

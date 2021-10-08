@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yomorun/cli/rx"
+	"github.com/yomorun/yomo/rx"
 )
 
 // NoiseData represents the structure of data
@@ -16,7 +16,7 @@ type NoiseData struct {
 	From  string  `json:"from"`  // Source IP
 }
 
-var printer = func(_ context.Context, i interface{}) (interface{}, error) {
+var echo = func(_ context.Context, i interface{}) (interface{}, error) {
 	value := i.(*NoiseData)
 	value.Noise = value.Noise / 10
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
@@ -29,7 +29,7 @@ func Handler(rxstream rx.Stream) rx.Stream {
 	stream := rxstream.
 		Unmarshal(json.Unmarshal, func() interface{} { return &NoiseData{} }).
 		Debounce(50).
-		Map(printer).
+		Map(echo).
 		StdOut()
 
 	return stream
