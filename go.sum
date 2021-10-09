@@ -310,6 +310,8 @@ github.com/viant/toolbox v0.24.0/go.mod h1:OxMCG57V0PXuIP2HNQrtJf2CjqdmbrOx5EkMI
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/yomorun/y3 v1.0.4 h1:HsptwVCb12QBbSnuolbFn1YLdXOuF/tBFsGmKA5FsDk=
 github.com/yomorun/y3 v1.0.4/go.mod h1:+zwvZrKHe8D3fTMXNTsUsZXuI+kYxv3LRA2fSJEoWbo=
+github.com/yomorun/yomo v1.5.3 h1:r+2wCvLudg+tlXjqMK1lm1a4EanB9vWP2dVgmOVPanA=
+github.com/yomorun/yomo v1.5.3/go.mod h1:54yY7cmQ/KdBPPFozeg0Xi+xxR9rQlGXJbABE+Fmy9k=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
