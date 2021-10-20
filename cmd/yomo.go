@@ -28,10 +28,10 @@ import (
 )
 
 var (
-	config  string
-	url     string
-	opts    serverless.Options
-	verbose bool
+	config         string
+	zipperEndpoint string
+	opts           serverless.Options
+	verbose        bool
 )
 
 // rootCmd represents the base command when called without any subcommands

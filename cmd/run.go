@@ -44,7 +44,7 @@ var runCmd = &cobra.Command{
 		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		// resolve serverless
 		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
-		if err := parseURL(url, &opts); err != nil {
+		if err := parseURL(zipperEndpoint, &opts); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
@@ -84,7 +84,7 @@ func init() {
 
 	runCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file")
 	// runCmd.Flags().StringVarP(&opts.Lang, "lang", "l", "go", "source language")
-	runCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
+	runCmd.Flags().StringVarP(&zipperEndpoint, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
 	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name (required). It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	runCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 	runCmd.MarkFlagRequired("name")
