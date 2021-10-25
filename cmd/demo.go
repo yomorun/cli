@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/ga"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
 )
@@ -48,8 +49,12 @@ func init() {
 
 	demoCmd.Flags().StringVarP(&opts.Filename, "file", "f", "app.go", "The URL or local path of Stream function file")
 }
+
 // runDemo runs a YoMo demo.
 func runDemo() {
+	// ga
+	ga.Send(GetVersion(), "demo", opts.Filename)
+
 	// Serverless
 	log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 	if isUrl(opts.Filename) {

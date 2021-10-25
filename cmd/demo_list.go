@@ -21,6 +21,7 @@ import (
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/ga"
 )
 
 // demoListCmd represents the list sub command in demo.
@@ -30,6 +31,9 @@ var demoListCmd = &cobra.Command{
 	Long:  "List the Streaming Serverless and Geo-Distributed examples provided by YoMo.",
 	Run: func(cmd *cobra.Command, args []string) {
 		selectDemo()
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "demo", "list")
 	},
 }
 

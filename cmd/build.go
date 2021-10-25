@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/ga"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
 )
@@ -57,6 +58,9 @@ var buildCmd = &cobra.Command{
 			return
 		}
 		log.SuccessStatusEvent(os.Stdout, "Success! YoMo Stream Function build.")
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "build", "")
 	},
 }
 

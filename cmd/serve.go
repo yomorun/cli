@@ -20,6 +20,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/yomorun/cli/pkg/ga"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/yomo"
 )
@@ -55,6 +56,9 @@ var serveCmd = &cobra.Command{
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "serve", "")
 	},
 }
 

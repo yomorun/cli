@@ -20,6 +20,7 @@ import (
 	"runtime/debug"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/ga"
 )
 
 var (
@@ -46,6 +47,9 @@ var versionCmd = &cobra.Command{
 	Short: "print CLI version",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("YoMo CLI Version:", GetVersion())
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "version", "")
 	},
 }
 

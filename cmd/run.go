@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli/pkg/ga"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
 	_ "github.com/yomorun/cli/serverless/golang"
@@ -76,6 +77,9 @@ var runCmd = &cobra.Command{
 		// <-sigCh
 		// log.WarningStatusEvent(os.Stdout, "Terminated signal received: shutting down")
 		// log.InfoStatusEvent(os.Stdout, "Exited YoMo Stream Function instance.")
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "run", "")
 	},
 }
 

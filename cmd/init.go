@@ -21,6 +21,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/yomorun/cli/pkg/file"
+	"github.com/yomorun/cli/pkg/ga"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless/golang"
 )
@@ -56,6 +57,9 @@ var initCmd = &cobra.Command{
 		log.InfoStatusEvent(os.Stdout, "You can enjoy the YoMo Stream Function via the command: ")
 		log.InfoStatusEvent(os.Stdout, "\tDEV: \tyomo dev -n %s %s/app.go", "Noise", name)
 		log.InfoStatusEvent(os.Stdout, "\tPROD: \tFirst run source application, eg: go run example/source/main.go\r\n\t\tSecond: yomo run -n %s %s/app.go", name, name)
+	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		ga.Send(GetVersion(), "init", "")
 	},
 }
 
