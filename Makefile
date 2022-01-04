@@ -3,6 +3,7 @@ GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go")
 VETPACKAGES ?= $(shell $(GO) list ./... | grep -v /examples/)
 CLI_VERSION ?= $(shell git describe --tags 2>/dev/null || git rev-parse --short HEAD)
+GO_LDFLAGS ?= -X $(shell $(GO) list -m)/cmd.Version=$(CLI_VERSION)
 VER ?= $(shell cat VERSION)
 
 .PHONY: fmt
