@@ -1,16 +1,21 @@
 # YoMo CLI
+
 Command-line tools for YoMo
 
-## Prerequisites
+## Binary
+
+`curl -sL https://github.com/yomorun/cli/releases/download/v0.1.3/yomo-v0.1.3-`uname -m`-`uname -s`.tar.gz | tar xvfz -`
+
+## Build from source
 
 [Installing Go](https://golang.org/doc/install)
 
-## Installing
 You can easily install the latest release globally by running:
 
 ```sh
 go install github.com/yomorun/cli/yomo@latest
 ```
+
 Or you can install into another directory:
 
 ```sh

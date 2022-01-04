@@ -19,10 +19,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Run go mod tidy
         run: go mod tidy
-      - name: build binaries
-        run: make build-arm build-linux
-      - name: archive binaries
-        run: make archive-bin-arm archive-bin-linux
+      - name: build & archive binaries
+        run: make archive-release
       - name: upload artifacts
         uses: actions/upload-artifact@master
         with:
