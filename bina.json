@@ -2,19 +2,19 @@
     "platforms": {
       "darwin-arm64": {
         "asset": "yomo-v0.1.4-arm64-Darin.tar.gz",
-        "file": "bin/yomo"
+        "file": "yomo"
       },
       "darwin-amd64": {
         "asset": "yomo-v0.1.4-x86_64-Darin.tar.gz",
-        "file": "bin/yomo"
+        "file": "yomo"
       },
       "linux-arm64": {
         "asset": "yomo-v0.1.4-arm64-Linux.tar.gz",
-        "file": "bin/yomo"
+        "file": "yomo"
       },
       "linux-amd64": {
         "asset": "yomo-v0.1.4-x86_64-Linux.tar.gz",
-        "file": "bin/yomo"
+        "file": "yomo"
       }
     }
   }
