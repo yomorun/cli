@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: yomo-artifact
-          path: ./bin/*.tar.gz
+          path: ./bin/**/*
   publish:
     name: Publish binaries
     needs: build

@@ -30,6 +30,7 @@ archive-release:
 	GOARCH=amd64 GOOS=linux $(GO) build -o bin/yomo -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
 	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Linux.tar.gz yomo
 	rm -rf bin/yomo
+	cp ./bina.json ./bin/.
 
 tar-release: build-release
 	tar -C ./bin -czf bin/yomo-${VER}-arm64-Darwin.tar.gz yomo
