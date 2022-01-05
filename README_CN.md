@@ -8,7 +8,7 @@ YoMo 命令行工具
 
 或者
 
-`curl -fsSL "https://bina.egoist.sh/yomorun/cli" | sh`
+`curl -fsSL "https://bina.egoist.sh/yomorun/cli?name=yomo" | sh`
 
 ## 基于源代码编译安装
 
