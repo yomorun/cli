@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
 jobs:
   build:
     name: Build Linux binaries
@@ -25,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: yomo-artifact
-          path: ./bin/*.tar.gz
+          path: ./bin/**/*
   publish:
     name: Publish binaries
     needs: build
