@@ -8,7 +8,7 @@ Command-line tools for YoMo
 
 OR
 
-`curl -fsSL "https://bina.egoist.sh/yomorun/cli?file=yomo" | sh`
+`curl -fsSL "https://bina.egoist.sh/yomorun/cli" | sh`
 
 ## Build from source
 
