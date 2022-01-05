@@ -1,8 +1,19 @@
 # YoMo CLI
+
 YoMo 命令行工具
 
-## 前置条件
+## 直接二进制文件
+
+`curl -sL https://github.com/yomorun/cli/releases/download/v0.1.5/yomo-v0.1.5-`uname -m`-`uname -s`.tar.gz | tar xvfz -`
+
+或者
+
+`curl -fsSL "https://bina.egoist.sh/yomorun/cli?name=yomo" | sh`
+
+## 基于源代码编译安装
+
 ❗️确保已安装 Go 编译运行环境，参考 [Installing Go](https://golang.org/doc/install)
+
 ## 安装
 ```sh
 go install github.com/yomorun/cli/yomo@latest
