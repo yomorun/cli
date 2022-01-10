@@ -43,6 +43,10 @@ yomo init [Name]
 ```shell
 yomo run --name [Name] app.go
 ```
+生产环境
+```shell
+yomo run sl.yomo
+```
 
 ### 3. Stream Function (数据输出)
 #### 编写数据消费应用程序
@@ -52,6 +56,10 @@ yomo run --name [Name] app.go
 
 ```shell
 yomo run --name [Name] app.go
+```
+生产环境
+```shell
+yomo run sl.yomo
 ```
 
 ### 4. YoMo-Zipper 应用编排

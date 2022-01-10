@@ -21,19 +21,23 @@ type Serverless interface {
 
 	// Run compiles and runs the serverless
 	Run(verbose bool) error
+
+	Executable() bool
 }
 
 // Register will register a serverless to drivers collections safely
-func Register(ext string, s Serverless) {
+func Register(s Serverless, exts ...string) {
 	driversMu.Lock()
 	defer driversMu.Unlock()
 	if s == nil {
 		panic("serverless: Register serverless is nil")
 	}
-	if _, dup := drivers[ext]; dup {
-		panic("serverless: Register called twice for source " + ext)
+	for _, ext := range exts {
+		if _, dup := drivers[ext]; dup {
+			panic("serverless: Register called twice for source " + ext)
+		}
+		drivers[ext] = s
 	}
-	drivers[ext] = s
 }
 
 // Create returns a new serverless instance with options.
@@ -49,5 +53,6 @@ func Create(opts *Options) (Serverless, error) {
 		}
 		return s, nil
 	}
+
 	return nil, fmt.Errorf(`serverless: unsupport "%s" source (forgotten import?)`, ext)
 }

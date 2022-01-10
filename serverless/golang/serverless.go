@@ -207,6 +207,10 @@ func (s *GolangServerless) Run(verbose bool) error {
 	return cmd.Run()
 }
 
+func (s *GolangServerless) Executable() bool {
+	return false
+}
+
 func generateCode(fset *token.FileSet, file *ast.File) ([]byte, error) {
 	var output []byte
 	buffer := bytes.NewBuffer(output)
@@ -218,5 +222,5 @@ func generateCode(fset *token.FileSet, file *ast.File) ([]byte, error) {
 }
 
 func init() {
-	serverless.Register(".go", &GolangServerless{})
+	serverless.Register(&GolangServerless{}, ".go")
 }
