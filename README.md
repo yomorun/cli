@@ -57,6 +57,10 @@ yomo init [Name]
 ```sh
 yomo run --name [Name] app.go
 ```
+OR in Production
+```sh
+yomo run sl.yomo
+```
 
 ### 3. Stream Function to store data in DB
 
@@ -68,6 +72,10 @@ See [example/stream-fn-db/app.go](https://github.com/yomorun/cli/blob/main/examp
 
 ```sh
 yomo run --name [Name] app.go
+```
+OR in Production
+```sh
+yomo run sl.yomo
 ```
 
 ### 4. YoMo-Zipper

@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Copy file from src to dst
@@ -116,4 +117,12 @@ func GetBinContents(path string) []byte {
 		return nil
 	}
 	return data
+}
+
+func IsExec(filename string) bool {
+	ext := strings.ToLower(filepath.Ext(filename))
+	if ext == ".yomo" || ext == ".exe" {
+		return true
+	}
+	return false
 }
