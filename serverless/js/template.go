@@ -6,14 +6,8 @@ import (
 	"text/template"
 )
 
-//go:embed templates/main_rx.tmpl
-var MainFuncRxTmpl []byte
-
 //go:embed templates/main_raw_bytes.tmpl
 var MainFuncRawBytesTmpl []byte
-
-//go:embed templates/init.tmpl
-var InitFuncTmpl []byte
 
 // Context defines context for the template
 type Context struct {

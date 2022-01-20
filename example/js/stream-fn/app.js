@@ -5,7 +5,7 @@ function handler(data) {
     decodedString = arrayBufferToString(data);
     // parse JSON
     var value = JSON.parse(decodedString);
-    value.from = "JS SFN处理>" + value.from
+    value.from = value.from + ">JS SFN"
     value.noise = value.noise / 10
     // log.Printf(">> data.JSON: %v, type:%v", value, typeof value);
 

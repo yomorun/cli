@@ -18,7 +18,7 @@ type NoiseData struct {
 
 var echo = func(_ context.Context, i interface{}) (interface{}, error) {
 	value := i.(*NoiseData)
-	value.From = "SFN处理>" + value.From
+	value.From = value.From + ">SFN"
 	value.Noise = value.Noise / 10
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
 	fmt.Println(fmt.Sprintf("[stream-fn] from=%s, Timestamp=%d, value=%f (⚡️=%dms)", value.From, value.Time, value.Noise, rightNow-value.Time))

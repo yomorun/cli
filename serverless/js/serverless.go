@@ -15,10 +15,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"golang.org/x/tools/go/ast/astutil"
 	"golang.org/x/tools/imports"
 
-	"github.com/dop251/goja"
 	"github.com/yomorun/cli/pkg/file"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
@@ -55,35 +53,21 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 	mainFuncTmpl := string(MainFuncRawBytesTmpl)
 	mainFunc, err := RenderTmpl(mainFuncTmpl, &ctx)
 	if err != nil {
-		return fmt.Errorf("Init: %s", err)
+		return fmt.Errorf("Init: render template %s", err)
 	}
-	// read js source
-	vm := goja.New()
-	// data := []byte("this is a string")
-	// t.Logf("data[%d]=%v\n", len(data), data)
-	// buf := vm.NewArrayBuffer(data)
-	// vm.Set("buf", buf)
-	_, err = vm.RunString(string(source))
-	if err != nil {
-		return fmt.Errorf("Init: run js script err %s", err)
-	}
-	var jsFn func([]byte) (byte, []byte)
-	err = vm.ExportTo(vm.Get("Handler"), &jsFn)
-	if err != nil {
-		return fmt.Errorf("Init: get js handler err %s", err)
-	}
-
-	// merge to .go source
-	source = append(source, mainFunc...)
-	// log.InfoStatusEvent(os.Stdout, "merge source elapse: %v", time.Since(now))
+	// merge .js to .go source
+	buffer := bytes.NewBuffer(mainFunc)
+	buffer.WriteString("\nconst source = `")
+	buffer.Write(source)
+	buffer.WriteString("`")
 	// Create the AST by parsing src
 	fset := token.NewFileSet()
-	astf, err := parser.ParseFile(fset, "", source, 0)
+	astf, err := parser.ParseFile(fset, "", buffer, parser.AllErrors)
 	if err != nil {
 		return fmt.Errorf("Init: parse source file err %s", err)
 	}
 	// Add import packages
-	astutil.AddNamedImport(fset, astf, "", "github.com/yomorun/yomo")
+	// astutil.AddNamedImport(fset, astf, "", "github.com/yomorun/yomo")
 	// astutil.AddNamedImport(fset, astf, "stdlog", "log")
 	// log.InfoStatusEvent(os.Stdout, "import elapse: %v", time.Since(now))
 	// Generate the code
@@ -121,7 +105,6 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 		return err
 	}
 
-	// TODO: check if is already built in temp dir by MD5
 	s.source = tempFile
 	return nil
 }

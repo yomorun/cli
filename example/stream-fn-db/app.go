@@ -20,6 +20,7 @@ func Handler(data []byte) (byte, []byte) {
 	if err != nil {
 		log.Printf(">> [sink] unmarshal data failed, err=%v", err)
 	} else {
+		noise.From = noise.From + ">SINK"
 		log.Printf(">> [sink] save `%v` to FaunaDB\n", noise)
 	}
 
