@@ -33,3 +33,4 @@ example/mesh/stream-fn-db/stream-fn-db
 release/
 bin/
 .vscode
+example/js-stream-fn/app
