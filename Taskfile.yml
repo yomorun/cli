@@ -119,6 +119,20 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/stream-fn-db/app.go"
     silent: false
 
+  example-js-stream-fn:
+    desc: "run js-stream-fn application"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/js/stream-fn/app.js"
+    silent: false
+
+  example-js-stream-fn-db:
+    desc: run output stream-fn-db
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/js/stream-fn-db/app.js"
+    silent: false
+
   version:
     desc: "print version"
     cmds: 
@@ -139,6 +153,8 @@ tasks:
       - rm -rf example/mesh/stream-fn-db/stream-fn-db{{exeExt}}
       - rm -rf cmd/yomo/yomo{{exeExt}}
       - rm -rf release
+      - rm -rf example/js/stream-fn/sl.*
+      - rm -rf example/js/stream-fn-db/sl.*
       - echo 'cli clean.'
     silent: true
 

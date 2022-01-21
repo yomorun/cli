@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/briandowns/spinner v1.12.0
+	github.com/dop251/goja v0.0.0-20220110113543-261677941f3c
 	github.com/fatih/color v1.7.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.1.3

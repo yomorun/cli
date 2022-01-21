@@ -18,17 +18,19 @@ type NoiseData struct {
 
 var echo = func(_ context.Context, i interface{}) (interface{}, error) {
 	value := i.(*NoiseData)
+	value.From = value.From + ">SFN"
 	value.Noise = value.Noise / 10
 	rightNow := time.Now().UnixNano() / int64(time.Millisecond)
 	fmt.Println(fmt.Sprintf("[stream-fn] from=%s, Timestamp=%d, value=%f (⚡️=%dms)", value.From, value.Time, value.Noise, rightNow-value.Time))
-	return value.Noise, nil
+	// return value.Noise, nil
+	return value, nil
 }
 
 // Handler will handle data in Rx way
 func Handler(rxstream rx.Stream) rx.Stream {
 	stream := rxstream.
 		Unmarshal(json.Unmarshal, func() interface{} { return &NoiseData{} }).
-		Debounce(50).
+		// Debounce(50).
 		Map(echo).
 		Marshal(json.Marshal).
 		PipeBackToZipper(0x34)

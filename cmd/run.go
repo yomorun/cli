@@ -24,6 +24,7 @@ import (
 	"github.com/yomorun/cli/serverless"
 	_ "github.com/yomorun/cli/serverless/exec"
 	_ "github.com/yomorun/cli/serverless/golang"
+	_ "github.com/yomorun/cli/serverless/js"
 )
 
 const (
