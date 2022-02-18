@@ -5,7 +5,7 @@ func main() {
 	defer sfn.Close()
 
 	// set observe DataIDs
-	sfn.SetObserveDataID(DataID()...)
+	sfn.SetObserveDataTag(DataID()...)
 	
 	// create a Rx runtime.
 	rt := rx.NewRuntime(sfn)

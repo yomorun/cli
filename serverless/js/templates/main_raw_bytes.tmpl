@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// set observe DataIDs
-	sfn.SetObserveDataID(getObserveDataID(vm, prg)...)
+	sfn.SetObserveDataTag(getObserveDataID(vm, prg)...)
 
 	// set handler
 	sfn.SetHandler(wrappedHandler(vm, prg))
