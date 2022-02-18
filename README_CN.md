@@ -4,7 +4,7 @@ YoMo 命令行工具
 
 ## 直接二进制文件
 
-`curl -sL https://github.com/yomorun/cli/releases/download/v0.1.5/yomo-v0.1.5-`uname -m`-`uname -s`.tar.gz | tar xvfz -`
+`curl -sL https://github.com/yomorun/cli/releases/download/v0.1.6/yomo-v0.1.6-`uname -m`-`uname -s`.tar.gz | tar xvfz -`
 
 或者
 

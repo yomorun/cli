@@ -5,7 +5,7 @@ Command-line tools for YoMo
 ## Binary
 
 ```bash
-curl -sL https://github.com/yomorun/cli/releases/download/v0.1.5/yomo-v0.1.5-`uname -m`-`uname -s`.tar.gz | tar xvfz -
+curl -sL https://github.com/yomorun/cli/releases/download/v0.1.6/yomo-v0.1.6-`uname -m`-`uname -s`.tar.gz | tar xvfz -
 ```
 
 OR
