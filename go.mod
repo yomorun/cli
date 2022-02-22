@@ -12,3 +12,5 @@ require (
 	github.com/yomorun/yomo v1.5.4
 	golang.org/x/tools v0.1.1
 )
+
+replace github.com/yomorun/yomo v1.5.4 => ../yomo
