@@ -74,6 +74,7 @@ func main() {
 	select {}
 }
 
+// DataTags observe tag list
 func DataTags() []byte {
 	return []byte{0x10}
 }

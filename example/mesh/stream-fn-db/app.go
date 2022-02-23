@@ -30,6 +30,7 @@ func Handler(data []byte) (byte, []byte) {
 	return 0x0, nil
 }
 
+// DataTags observe tag list
 func DataTags() []byte {
 	return []byte{0x14}
 }
