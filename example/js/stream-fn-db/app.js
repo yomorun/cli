@@ -9,7 +9,7 @@ function handler(data) {
     log.Printf(">> [sink] save %v to FaunaDB", value);
 }
 
-function dataID() {
+function dataTags() {
     return [0x34]
 }
 

@@ -10,9 +10,6 @@ import (
 
 // Serverless main function
 func main() {
-	sfn := yomo.NewStreamFunction("{{.Name}}", yomo.WithZipperAddr("{{.Host}}:{{.Port}}"))
-	defer sfn.Close()
-
 	// create a javascript vm
 	vm := goja.New()
 	vm.Set("log", log.Default())
@@ -27,8 +24,8 @@ func main() {
 		return
 	}
 
-	// set observe DataIDs
-	sfn.SetObserveDataTag(getObserveDataID(vm, prg)...)
+	sfn := yomo.NewStreamFunction("{{.Name}}", yomo.WithZipperAddr("{{.Host}}:{{.Port}}"), yomo.WithObservedDataTags(getObserveDataTags(vm, prg)...))
+	defer sfn.Close()
 
 	// set handler
 	sfn.SetHandler(wrappedHandler(vm, prg))
@@ -66,19 +63,19 @@ func complieJS(vm *goja.Runtime, source string) (*goja.Program, error) {
 	return prg, nil
 }
 
-// getObserveDataID
-func getObserveDataID(vm *goja.Runtime, prg *goja.Program) (dataIDs []byte) {
-	var dataIDFn func() []byte
-	jsFn := vm.Get("dataID")
+// getObserveDataTags
+func getObserveDataTags(vm *goja.Runtime, prg *goja.Program) (dataTags []byte) {
+	var dataTagsFn func() []byte
+	jsFn := vm.Get("dataTag")
 	if jsFn == nil {
-		log.Println("`dataID` function is not found")
+		log.Println("`dataTag` function is not found")
 		return
 	}
-	err := vm.ExportTo(jsFn, &dataIDFn)
+	err := vm.ExportTo(jsFn, &dataTagsFn)
 	if err != nil {
 		log.Println(err)
 	}
-	dataIDs = dataIDFn()
+	dataTags = dataTagsFn()
 	return
 }
 

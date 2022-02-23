@@ -38,6 +38,6 @@ func Handler(rxstream rx.Stream) rx.Stream {
 	return stream
 }
 
-func DataID() []byte {
+func DataTags() []byte {
 	return []byte{0x33}
 }
