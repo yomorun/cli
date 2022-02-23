@@ -30,17 +30,18 @@ func Handler(data []byte) (byte, []byte) {
 	return 0x0, nil
 }
 
-func DataID() []byte {
+func DataTags() []byte {
 	return []byte{0x14}
 }
 
 func main() {
 	addr := fmt.Sprintf("%s:%d", "localhost", getPort())
-	sfn := yomo.NewStreamFunction("MockDB", yomo.WithZipperAddr(addr))
+	sfn := yomo.NewStreamFunction(
+		"MockDB",
+		yomo.WithZipperAddr(addr),
+		yomo.WithObserveDataTags(DataTags()...),
+	)
 	defer sfn.Close()
-
-	// set observe DataIDs
-	sfn.SetObserveDataTag(DataID()...)
 
 	// set handler
 	sfn.SetHandler(Handler)

@@ -1,7 +1,11 @@
 
 // Serverless main function
 func main() {
-	sfn := yomo.NewStreamFunction("{{.Name}}", yomo.WithZipperAddr("{{.Host}}:{{.Port}}"), yomo.WithObservedDataTags(DataTags()...))
+	sfn := yomo.NewStreamFunction(
+		"{{.Name}}",
+		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
+		yomo.WithObserveDataTags(DataTags()...),
+	)
 	defer sfn.Close()
 
 	// create a Rx runtime.

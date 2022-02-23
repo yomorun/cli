@@ -24,7 +24,11 @@ func main() {
 		return
 	}
 
-	sfn := yomo.NewStreamFunction("{{.Name}}", yomo.WithZipperAddr("{{.Host}}:{{.Port}}"), yomo.WithObservedDataTags(getObserveDataTags(vm, prg)...))
+	sfn := yomo.NewStreamFunction(
+		"{{.Name}}",
+		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
+		yomo.WithObserveDataTags(getObserveDataTags(vm, prg)...),
+	)
 	defer sfn.Close()
 
 	// set handler
@@ -66,9 +70,9 @@ func complieJS(vm *goja.Runtime, source string) (*goja.Program, error) {
 // getObserveDataTags
 func getObserveDataTags(vm *goja.Runtime, prg *goja.Program) (dataTags []byte) {
 	var dataTagsFn func() []byte
-	jsFn := vm.Get("dataTag")
+	jsFn := vm.Get("dataTags")
 	if jsFn == nil {
-		log.Println("`dataTag` function is not found")
+		log.Println("`dataTags` function is not found")
 		return
 	}
 	err := vm.ExportTo(jsFn, &dataTagsFn)
