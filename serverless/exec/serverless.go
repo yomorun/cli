@@ -36,7 +36,7 @@ func (s *ExecServerless) Run(verbose bool) error {
 	log.InfoStatusEvent(os.Stdout, "Run: %s", s.target)
 	cmd := exec.Command(s.target)
 	if verbose {
-		cmd.Env = []string{"YOMO_LOG_LEVEL=error"}
+		cmd.Env = []string{"YOMO_LOG_LEVEL=debug"}
 	}
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
