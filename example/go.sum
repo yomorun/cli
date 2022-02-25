@@ -167,6 +167,8 @@ github.com/viant/assertly v0.4.8/go.mod h1:aGifi++jvCrUaklKEKT0BU95igDNaqkvz+49u
 github.com/viant/toolbox v0.24.0/go.mod h1:OxMCG57V0PXuIP2HNQrtJf2CjqdmbrOx5EkMILuUhzM=
 github.com/yomorun/y3 v1.0.4 h1:HsptwVCb12QBbSnuolbFn1YLdXOuF/tBFsGmKA5FsDk=
 github.com/yomorun/y3 v1.0.4/go.mod h1:+zwvZrKHe8D3fTMXNTsUsZXuI+kYxv3LRA2fSJEoWbo=
+github.com/yomorun/yomo v1.6.0 h1:3ScCrpKlXVFNzFf8CrICyfvi/t0V/qGllCxHoZ4d5Hc=
+github.com/yomorun/yomo v1.6.0/go.mod h1:Py3zXP5v+cRYV9yhaxUVNbh3bB2WAgPfoAL1o8OQWLo=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.opencensus.io v0.18.0/go.mod h1:vKdFvxhtzZ9onBp9VKHK8z/sRpBMnKAsufL7wlDrCOA=
