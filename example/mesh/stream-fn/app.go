@@ -48,11 +48,12 @@ func Handler(rxstream rx.Stream) rx.Stream {
 
 func main() {
 	addr := fmt.Sprintf("%s:%d", "localhost", getPort())
-	sfn := yomo.NewStreamFunction("Noise", yomo.WithZipperAddr(addr))
+	sfn := yomo.NewStreamFunction(
+		"Noise",
+		yomo.WithZipperAddr(addr),
+		yomo.WithObserveDataTags(DataTags()...),
+	)
 	defer sfn.Close()
-
-	// set observe DataIDs
-	sfn.SetObserveDataTag(DataID()...)
 
 	// create a Rx runtime.
 	rt := rx.NewRuntime(sfn)
@@ -73,7 +74,8 @@ func main() {
 	select {}
 }
 
-func DataID() []byte {
+// DataTags observe tag list
+func DataTags() []byte {
 	return []byte{0x10}
 }
 

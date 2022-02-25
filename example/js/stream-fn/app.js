@@ -17,7 +17,7 @@ function handler(data) {
     return {"id": 0x34, "data": buf}
 }
 
-function dataID() {
+function dataTags() {
     return [0x33]
 }
 

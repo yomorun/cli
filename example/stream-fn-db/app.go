@@ -27,6 +27,6 @@ func Handler(data []byte) (byte, []byte) {
 	return 0x0, nil
 }
 
-func DataID() []byte {
+func DataTags() []byte {
 	return []byte{0x34}
 }

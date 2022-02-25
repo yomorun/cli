@@ -85,8 +85,7 @@ tasks:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
     silent: false
     env:
-      YOMO_ENABLE_DEBUG: false
-      YOMO_LOG_LEVEL: info
+      YOMO_LOG_LEVEL: error
 
   example-source:
     desc: run source application
