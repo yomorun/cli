@@ -4,13 +4,13 @@ Command-line tools for YoMo
 
 ## Binary
 
-```bash
-curl -sL https://github.com/yomorun/cli/releases/download/v1.0.1/yomo-v1.0.1-`uname -m`-`uname -s`.tar.gz | tar xvfz -
-```
+`curl -fsSL "https://bina.egoist.sh/yomorun/cli?name=yomo" | sh`
 
 OR
 
-`curl -fsSL "https://bina.egoist.sh/yomorun/cli?name=yomo" | sh`
+```bash
+curl -sL https://github.com/yomorun/cli/releases/download/v1.0.1/yomo-v1.0.1-`uname -m`-`uname -s`.tar.gz | tar xvfz -
+```
 
 ## Build from source
 
