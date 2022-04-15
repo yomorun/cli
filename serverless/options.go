@@ -14,4 +14,6 @@ type Options struct {
 	ModFile string
 	// Arguments are the command line arguments.
 	Arguments []string
+	// Client credential
+	Credential string
 }

@@ -17,6 +17,8 @@ type Context struct {
 	Host string
 	// Port is the port listen on or connect to
 	Port int
+	// Client credential 
+	Credential string
 }
 
 // RenderTmpl renders the template with the given context

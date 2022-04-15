@@ -19,6 +19,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/yomorun/cli/pkg/file"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
@@ -104,5 +105,6 @@ func init() {
 	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name. It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	runCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 	// runCmd.MarkFlagRequired("name")
-
+	runCmd.Flags().StringVarP(&opts.Credential, "credential", "d", "", "client credential payload, eg: `token:dBbBiRE7`")
+	viper.BindPFlag("credential", runCmd.Flags().Lookup("credential"))
 }

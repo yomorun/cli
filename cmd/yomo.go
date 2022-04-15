@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/yomorun/cli/serverless"
@@ -63,7 +64,6 @@ func init() {
 
 	// set verbose flag
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -81,6 +81,7 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(config)
 	} else {
+		viper.AddConfigPath(".")
 		// Find home directory.
 		home, err := homedir.Dir()
 		cobra.CheckErr(err)
@@ -91,6 +92,8 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
+	viper.SetEnvPrefix("YOMO")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
