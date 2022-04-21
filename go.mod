@@ -15,5 +15,3 @@ require (
 	golang.org/x/tools v0.1.10
 	gopkg.in/ini.v1 v1.66.4 // indirect
 )
-
-replace github.com/yomorun/yomo => ../yomo

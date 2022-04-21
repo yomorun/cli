@@ -16,7 +16,7 @@ vars:
   Commit:
     sh: git rev-parse --short HEAD
   Module:
-    sh: go list -m
+    sh: go list 
 
 tasks:
   default:
@@ -86,6 +86,7 @@ tasks:
     silent: false
     env:
       YOMO_LOG_LEVEL: error
+      YOMO_AUTH: token:1234
 
   example-source:
     desc: run source application
@@ -94,6 +95,8 @@ tasks:
     cmds:
       - "./source{{exeExt}}"
     silent: false
+    env:
+      YOMO_CREDENTIAL: token:1234
 
   example-source-build:
     desc: build source application
@@ -110,6 +113,8 @@ tasks:
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/stream-fn/app.go"
     silent: false
+    env:
+      YOMO_CREDENTIAL: token:1234
 
   example-stream-fn-db:
     desc: run output stream-fn-db
@@ -117,6 +122,8 @@ tasks:
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/stream-fn-db/app.go"
     silent: false
+    env:
+      YOMO_CREDENTIAL: token:1234
 
   example-js-stream-fn:
     desc: "run js-stream-fn application"

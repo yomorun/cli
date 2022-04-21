@@ -46,9 +46,6 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 
 	// append main function
 	credential := viper.GetString("credential")
-	if len(credential) > 0 {
-		log.InfoStatusEvent(os.Stdout, "Credential=%s", credential)
-	}
 	ctx := Context{
 		Name: s.opts.Name,
 		Host: s.opts.Host,
