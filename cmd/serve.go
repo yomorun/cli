@@ -17,8 +17,10 @@ package cmd
 
 import (
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/yomo"
@@ -44,6 +46,20 @@ var serveCmd = &cobra.Command{
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 		}
+		// auth
+		auth := viper.GetString("auth")
+		if len(auth) > 0 {
+			idx := strings.Index(auth, ":")
+			if idx != -1 {
+				authName := auth[:idx]
+				idx++
+				args := auth[idx:]
+				authArgs := strings.Split(args, ",")
+				// log.InfoStatusEvent(os.Stdout, "authName=%s, authArgs=%s, idx=%d", authName, authArgs, idx)
+				zipper.InitOptions(yomo.WithAuth(authName, authArgs...))
+			}
+		}
+		// mesh
 		err = zipper.ConfigMesh(meshConfURL)
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
@@ -63,6 +79,12 @@ func init() {
 
 	serveCmd.Flags().StringVarP(&config, "config", "c", "workflow.yaml", "Workflow config file")
 	serveCmd.Flags().StringVarP(&meshConfURL, "mesh-config", "m", "", "The URL of mesh config")
+	serveCmd.Flags().String("port", "8888", "port test env")
+	// auth string
+	serveCmd.Flags().StringP("auth", "a", "", "authentication name and arguments, eg: `token:yomo`")
+	viper.BindPFlag("auth", serveCmd.Flags().Lookup("auth"))
+	// viper.BindPFlag("PORT", serveCmd.Flags().Lookup("port"))
+	// viper.BindEnv("auth","AUTH")
 	// serveCmd.MarkFlagRequired("config")
 }
 

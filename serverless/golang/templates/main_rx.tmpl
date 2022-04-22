@@ -5,6 +5,7 @@ func main() {
 		"{{.Name}}",
 		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
 		yomo.WithObserveDataTags(DataTags()...),
+        {{if .Credential -}}yomo.WithCredential("{{.Credential}}"),{{- end}}
 	)
 	defer sfn.Close()
 

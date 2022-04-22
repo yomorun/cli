@@ -17,6 +17,7 @@ import (
 
 	"golang.org/x/tools/imports"
 
+	"github.com/spf13/viper"
 	"github.com/yomorun/cli/pkg/file"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
@@ -44,10 +45,12 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 	}
 
 	// append main function
+	credential := viper.GetString("credential")
 	ctx := Context{
 		Name: s.opts.Name,
 		Host: s.opts.Host,
 		Port: s.opts.Port,
+		Credential: credential,
 	}
 
 	mainFuncTmpl := string(MainFuncRawBytesTmpl)

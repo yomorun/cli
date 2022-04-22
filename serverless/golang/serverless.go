@@ -18,6 +18,7 @@ import (
 	"golang.org/x/tools/go/ast/astutil"
 	"golang.org/x/tools/imports"
 
+	"github.com/spf13/viper"
 	"github.com/yomorun/cli/pkg/file"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
@@ -50,10 +51,12 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 	}
 
 	// append main function
+	credential := viper.GetString("credential")
 	ctx := Context{
-		Name: s.opts.Name,
-		Host: s.opts.Host,
-		Port: s.opts.Port,
+		Name:       s.opts.Name,
+		Host:       s.opts.Host,
+		Port:       s.opts.Port,
+		Credential: credential,
 	}
 
 	// determine: rx stream serverless or raw bytes serverless.

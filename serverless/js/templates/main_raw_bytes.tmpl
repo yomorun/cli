@@ -28,6 +28,7 @@ func main() {
 		"{{.Name}}",
 		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
 		yomo.WithObserveDataTags(getObserveDataTags(vm, prg)...),
+        {{if .Credential -}}yomo.WithCredential("{{.Credential}}"),{{- end}}
 	)
 	defer sfn.Close()
 
