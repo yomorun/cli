@@ -79,18 +79,7 @@ func init() {
 
 	serveCmd.Flags().StringVarP(&config, "config", "c", "workflow.yaml", "Workflow config file")
 	serveCmd.Flags().StringVarP(&meshConfURL, "mesh-config", "m", "", "The URL of mesh config")
-	serveCmd.Flags().String("port", "8888", "port test env")
 	// auth string
 	serveCmd.Flags().StringP("auth", "a", "", "authentication name and arguments, eg: `token:yomo`")
 	viper.BindPFlag("auth", serveCmd.Flags().Lookup("auth"))
-	// viper.BindPFlag("PORT", serveCmd.Flags().Lookup("port"))
-	// viper.BindEnv("auth","AUTH")
-	// serveCmd.MarkFlagRequired("config")
 }
-
-// func printYoMoServerConf(wfConf *util.WorkflowConfig) {
-// 	log.InfoStatusEvent(os.Stdout, "Found %d stream functions in YoMo-Zipper config", len(wfConf.Functions))
-// 	for i, sfn := range wfConf.Functions {
-// 		log.InfoStatusEvent(os.Stdout, "Stream Function %d: %s", i+1, sfn.Name)
-// 	}
-// }
