@@ -24,15 +24,20 @@ func main() {
 	}
 
 	source := yomo.NewSource("yomo-source", opts...)
+	defer source.Close()
+
 	err := source.Connect()
 	if err != nil {
 		log.Printf("[source] ❌ Emit the data to YoMo-Zipper failure with err: %v", err)
 		return
 	}
 
-	defer source.Close()
-
 	source.SetDataTag(0x33)
+	// set the error handler function when server error occurs
+	source.SetErrorHandler(func(err error) {
+		log.Printf("[source] receive server error: %v", err)
+		os.Exit(1)
+	})
 	// generate mock data and send it to YoMo-Zipper in every 100 ms.
 	generateAndSendData(source)
 }
