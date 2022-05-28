@@ -15,7 +15,7 @@ jobs:
     name: Build Linux binaries
     runs-on: ubuntu-latest
     env:
-      GOVER: 1.16
+      GOVER: 1.17
     steps:
       - name: Set up Go ${{ env.GOVER }}
         uses: actions/setup-go@v2
