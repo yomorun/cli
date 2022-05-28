@@ -9,7 +9,7 @@ Command-line tools for YoMo
 OR
 
 ```bash
-curl -sL https://github.com/yomorun/cli/releases/download/v1.0.3/yomo-v1.0.3-`uname -m`-`uname -s`.tar.gz | tar xvfz -
+curl -sL https://github.com/yomorun/cli/releases/download/v1.0.4/yomo-v1.0.4-`uname -m`-`uname -s`.tar.gz | tar xvfz -
 ```
 
 ## Build from source
