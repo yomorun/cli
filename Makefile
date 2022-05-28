@@ -37,3 +37,7 @@ tar-release: build-release
 	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Darwin.tar.gz yomo
 	tar -C ./bin -czf bin/yomo-${VER}-arm64-Linux.tar.gz yomo
 	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Linux.tar.gz yomo
+
+build-w-sym:
+	GOARCH=amd64 GOOS=linux $(GO) build -o bin/yomo -ldflags "${GO_LDFLAGS}" -gcflags=-l ./yomo/main.go
+
