@@ -17,9 +17,13 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"path/filepath"
 	"runtime/debug"
 
 	"github.com/spf13/cobra"
+	"github.com/yomorun/cli"
+	"golang.org/x/mod/modfile"
 )
 
 var (
@@ -27,6 +31,7 @@ var (
 	Date    = ""
 )
 
+// GetVersion get CLI version
 func GetVersion() string {
 	if Version == "" {
 		if info, ok := debug.ReadBuildInfo(); ok {
@@ -40,12 +45,33 @@ func GetVersion() string {
 	return fmt.Sprintf("%s(%s)", Version, Date)
 }
 
+// GetRuntimeVersion get yomo runtime version
+func GetRuntimeVersion() (v string) {
+	v = "(none)"
+	path := cli.GetRootPath()
+	buf, err := ioutil.ReadFile(filepath.Join(path, "go.mod"))
+	if err != nil {
+		return
+	}
+	f, err := modfile.Parse("go.mod", buf, nil)
+	if err != nil {
+		return
+	}
+	for _, r := range f.Require {
+		if r.Mod.Path == "github.com/yomorun/yomo" {
+			return r.Mod.Version
+		}
+	}
+	return
+}
+
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "print CLI version",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("YoMo CLI Version:", GetVersion())
+		fmt.Println("Runtime Version:", GetRuntimeVersion())
 	},
 }
 
