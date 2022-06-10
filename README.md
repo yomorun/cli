@@ -12,6 +12,11 @@ OR
 curl -sL https://github.com/yomorun/cli/releases/download/v1.0.4/yomo-v1.0.4-`uname -m`-`uname -s`.tar.gz | tar xvfz -
 ```
 
+Move `yomo` executable to /usr/local/bin/.
+```bash
+sudo chmod +x yomo && sudo mv yomo /usr/local/bin/
+```
+
 ## Build from source
 
 [Installing Go](https://golang.org/doc/install)
