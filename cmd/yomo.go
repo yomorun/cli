@@ -102,6 +102,6 @@ func initConfig() {
 }
 
 func setVersion() {
-	template := fmt.Sprintf("YoMo CLI version: %s\n", rootCmd.Version)
+	template := fmt.Sprintf("YoMo CLI version: %s\nRuntime Version: %s\n", rootCmd.Version, GetRuntimeVersion())
 	rootCmd.SetVersionTemplate(template)
 }
