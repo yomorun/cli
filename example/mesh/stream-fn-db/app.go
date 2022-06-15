@@ -32,7 +32,7 @@ func Handler(data []byte) (byte, []byte) {
 
 // DataTags observe tag list
 func DataTags() []byte {
-	return []byte{0x14}
+	return []byte{0x10}
 }
 
 func main() {
