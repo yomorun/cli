@@ -17,13 +17,9 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
 	"runtime/debug"
 
 	"github.com/spf13/cobra"
-	"github.com/yomorun/cli"
-	"golang.org/x/mod/modfile"
 )
 
 var (
@@ -48,18 +44,14 @@ func GetVersion() string {
 // GetRuntimeVersion get yomo runtime version
 func GetRuntimeVersion() (v string) {
 	v = "(none)"
-	path := cli.GetRootPath()
-	buf, err := ioutil.ReadFile(filepath.Join(path, "go.mod"))
-	if err != nil {
-		return
-	}
-	f, err := modfile.Parse("go.mod", buf, nil)
-	if err != nil {
-		return
-	}
-	for _, r := range f.Require {
-		if r.Mod.Path == "github.com/yomorun/yomo" {
-			return r.Mod.Version
+	if info, ok := debug.ReadBuildInfo(); ok {
+		for _, d := range info.Deps {
+			if d.Path == "github.com/yomorun/yomo" {
+				if d.Replace != nil {
+					return d.Replace.Version + "[Replace]"
+				}
+				return d.Version
+			}
 		}
 	}
 	return
