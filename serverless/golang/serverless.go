@@ -157,7 +157,7 @@ func (s *GolangServerless) Build(clean bool) error {
 		}
 	} else {
 		// Upgrade modules that provide packages imported by packages in the main module
-		cmd := exec.Command("go", "get", "-d", "-u", "./...")
+		cmd := exec.Command("go", "get", "-d", "./...")
 		cmd.Dir = s.tempDir
 		cmd.Env = env
 		out, err := cmd.CombinedOutput()

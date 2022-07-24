@@ -131,6 +131,8 @@ tasks:
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/js/stream-fn/app.js"
     silent: false
+    env:
+      YOMO_CREDENTIAL: token:1234
 
   example-js-stream-fn-db:
     desc: run output stream-fn-db
@@ -138,6 +140,8 @@ tasks:
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/js/stream-fn-db/app.js"
     silent: false
+    env:
+      YOMO_CREDENTIAL: token:1234
 
   version:
     desc: "print version"

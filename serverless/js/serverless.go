@@ -47,9 +47,9 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 	// append main function
 	credential := viper.GetString("credential")
 	ctx := Context{
-		Name: s.opts.Name,
-		Host: s.opts.Host,
-		Port: s.opts.Port,
+		Name:       s.opts.Name,
+		Host:       s.opts.Host,
+		Port:       s.opts.Port,
 		Credential: credential,
 	}
 
@@ -145,7 +145,7 @@ func (s *JsServerless) Build(clean bool) error {
 		}
 	} else {
 		// Upgrade modules that provide packages imported by packages in the main module
-		cmd := exec.Command("go", "get", "-d", "-u", "./...")
+		cmd := exec.Command("go", "get", "-d", "./...")
 		cmd.Dir = s.tempDir
 		cmd.Env = env
 		out, err := cmd.CombinedOutput()
